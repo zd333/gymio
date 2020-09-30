@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package exercise.v1;
+
+option go_package = "exercise/v1;exercisev1";
+
+message ExerciseProperty {
+  string id = 1;
+  string name_t_key = 2;
+  PropertyType type = 3;
+}
+
+enum PropertyType {
+  PROPERTY_TYPE_UNSPECIFIED = 0;
+  PROPERTY_TYPE_BOOL = 1;
+  PROPERTY_TYPE_STRING = 2;
+  PROPERTY_TYPE_INT = 3;
+  PROPERTY_TYPE_INT_PAIR = 4;
+  PROPERTY_TYPE_MAP = 5;
+}

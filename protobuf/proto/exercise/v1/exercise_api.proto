@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+package exercise.v1;
+
+option go_package = "exercise/v1;exercisev1";
+
+import "exercise/v1/exercise.proto";
+import "exercise/v1/exercise_property.proto";
+import "exercise/v1/exercise_property_value.proto";
+
+service ExerciseAPIService {
+  rpc CreateExercise(CreateExerciseRequest) returns (CreateExerciseResponse);
+  rpc GetExercise(GetExerciseRequest) returns (GetExerciseResponse);
+  rpc UpdateExercise(UpdateExerciseRequest) returns (UpdateExerciseResponse);
+  rpc DeleteExercise(DeleteExerciseRequest) returns (DeleteExerciseResponse);
+
+  rpc CreateProperty(CreatePropertyRequest) returns (CreatePropertyResponse);
+  rpc UpdateProperty(UpdatePropertyRequest) returns (UpdatePropertyResponse);
+  rpc DeleteProperty(DeletePropertyRequest) returns (DeletePropertyResponse);
+
+  rpc UpdatePropertiesOfExercise(UpdatePropertiesOfExerciseRequest) returns (UpdatePropertiesOfExerciseResponse);
+
+  rpc FindExercisesByProperties(FindExercisesByPropertiesRequest) returns (FindExercisesByPropertiesResponse);
+}
+
+message CreateExerciseRequest {
+  string name_t_key = 1;
+  repeated ExercisePropertyValue properties = 2;
+}
+
+message CreateExerciseResponse {
+  string id = 1;
+}
+
+message GetExerciseRequest {
+  string id = 1;
+}
+
+message GetExerciseResponse {
+  Exercise exercise = 1;
+}
+
+message UpdateExerciseRequest {
+  string id = 1;
+  string name_t_key = 2;
+}
+
+message UpdateExerciseResponse {}
+
+message DeleteExerciseRequest {
+  string id = 1;
+}
+
+message DeleteExerciseResponse {}
+
+message CreatePropertyRequest {
+  string name_t_key = 1;
+  PropertyType type = 2;
+}
+
+message CreatePropertyResponse {
+  string id = 1;
+}
+
+message UpdatePropertyRequest {
+  string name_t_key = 1;
+}
+
+message UpdatePropertyResponse {}
+
+message DeletePropertyRequest {
+  string id = 1;
+}
+
+message DeletePropertyResponse {}
+
+message UpdatePropertiesOfExerciseRequest {
+  string exercise_id = 1;
+  repeated ExercisePropertyValue properties_to_add = 2;
+  repeated ExercisePropertyValue properties_to_update = 3;
+  repeated string property_ids_to_remove = 4;
+}
+
+message UpdatePropertiesOfExerciseResponse {}
+
+message FindExercisesByPropertiesRequest {
+  repeated OrCondition or_conditions = 1;
+  message OrCondition {
+    repeated AndCondition and_conditions = 2;
+    message AndCondition {
+      string property_id = 3;
+      oneof property_value {
+        bool bool_value = 4;
+        string string_value = 5;
+        int32 int_value = 6;
+      }
+    }
+  }
+}
+
+message FindExercisesByPropertiesResponse {
+  repeated Exercise exercises = 1;
+}
