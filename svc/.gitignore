@@ -4,3 +4,4 @@ vendor
 # Files
 .DS_Store
 exercise-api
+!cmd/exercise-api
