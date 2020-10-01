@@ -2,7 +2,7 @@ package grpc
 
 import (
 	grpctransport "github.com/go-kit/kit/transport/grpc"
-	// "github.com/zd333/gymio/svc/pkg/endpoints"
+	// "github.com/zd333/gymio/svc/pkg/exercise/endpoints"
 	// exercisev1 "github.com/zd333/gymio/protobuf/gen/go/exercise/v1"
 )
 

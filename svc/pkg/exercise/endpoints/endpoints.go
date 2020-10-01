@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/go-kit/kit/endpoint"
-	"github.com/zd333/gymio/svc/pkg/entities"
-	"github.com/zd333/gymio/svc/pkg/service"
+	"github.com/zd333/gymio/svc/pkg/exercise/entities"
+	"github.com/zd333/gymio/svc/pkg/exercise/service"
 )
 
 type Endpoints struct {

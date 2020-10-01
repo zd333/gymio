@@ -3,8 +3,8 @@ package grpc
 import (
 	"context"
 	// exercisev1 "github.com/zd333/gymio/protobuf/gen/go/exercise/v1"
-	// "github.com/zd333/gymio/svc/pkg/endpoints"
-	// "github.com/zd333/gymio/svc/pkg/entities"
+	// "github.com/zd333/gymio/svc/pkg/exercise/endpoints"
+	// "github.com/zd333/gymio/svc/pkg/exercise/entities"
 )
 
 type DecodeRequestFunc func(context.Context, interface{}) (request interface{}, err error)

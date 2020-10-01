@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	"github.com/zd333/gymio/svc/pkg/entities"
+	"github.com/zd333/gymio/svc/pkg/exercise/entities"
 )
 
 type Service interface {

@@ -1,6 +1,6 @@
 package endpoints
 
-import "github.com/zd333/gymio/svc/pkg/entities"
+import "github.com/zd333/gymio/svc/pkg/exercise/entities"
 
 type CreateExerciseRequest struct {
 	NameTKey string
