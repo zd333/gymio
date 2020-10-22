@@ -1,13 +1,13 @@
 /* eslint-disable */
 import { ExercisePropertyValue } from '../../exercise/v1/exercise_property_value';
 import { Exercise } from '../../exercise/v1/exercise';
-import { PropertyType, propertyTypeFromJSON, propertyTypeToJSON } from '../../exercise/v1/exercise_property';
+import { PropertyType, ExerciseProperty, propertyTypeFromJSON, propertyTypeToJSON } from '../../exercise/v1/exercise_property';
 import { Reader, Writer } from 'protobufjs/minimal';
 
 
 export interface CreateExerciseRequest {
   nameTKey: string;
-  properties: ExercisePropertyValue[];
+  propertyValues: ExercisePropertyValue[];
 }
 
 export interface CreateExerciseResponse {
@@ -25,6 +25,7 @@ export interface GetExerciseResponse {
 export interface UpdateExerciseRequest {
   id: string;
   nameTKey: string;
+  propertyValues: ExercisePropertyValue[];
 }
 
 export interface UpdateExerciseResponse {
@@ -46,6 +47,13 @@ export interface CreatePropertyResponse {
   id: string;
 }
 
+export interface GetPropertiesRequest {
+}
+
+export interface GetPropertiesResponse {
+  properties: ExerciseProperty[];
+}
+
 export interface UpdatePropertyRequest {
   nameTKey: string;
 }
@@ -60,16 +68,6 @@ export interface DeletePropertyRequest {
 export interface DeletePropertyResponse {
 }
 
-export interface UpdatePropertiesOfExerciseRequest {
-  exerciseId: string;
-  propertiesToAdd: ExercisePropertyValue[];
-  propertiesToUpdate: ExercisePropertyValue[];
-  propertyIdsToRemove: string[];
-}
-
-export interface UpdatePropertiesOfExerciseResponse {
-}
-
 export interface FindExercisesByPropertiesRequest {
   orConditions: FindExercisesByPropertiesRequest_OrCondition[];
 }
@@ -80,7 +78,7 @@ export interface FindExercisesByPropertiesRequest_OrCondition {
 
 export interface FindExercisesByPropertiesRequest_OrCondition_AndCondition {
   propertyId: string;
-  propertyValue?: { $case: 'boolValue', boolValue: boolean } | { $case: 'stringValue', stringValue: string } | { $case: 'intValue', intValue: number };
+  serializedPropertyValue: string;
 }
 
 export interface FindExercisesByPropertiesResponse {
@@ -126,6 +124,12 @@ const baseCreatePropertyResponse: object = {
   id: "",
 };
 
+const baseGetPropertiesRequest: object = {
+};
+
+const baseGetPropertiesResponse: object = {
+};
+
 const baseUpdatePropertyRequest: object = {
   nameTKey: "",
 };
@@ -140,14 +144,6 @@ const baseDeletePropertyRequest: object = {
 const baseDeletePropertyResponse: object = {
 };
 
-const baseUpdatePropertiesOfExerciseRequest: object = {
-  exerciseId: "",
-  propertyIdsToRemove: "",
-};
-
-const baseUpdatePropertiesOfExerciseResponse: object = {
-};
-
 const baseFindExercisesByPropertiesRequest: object = {
 };
 
@@ -156,12 +152,13 @@ const baseFindExercisesByPropertiesRequest_OrCondition: object = {
 
 const baseFindExercisesByPropertiesRequest_OrCondition_AndCondition: object = {
   propertyId: "",
+  serializedPropertyValue: "",
 };
 
 const baseFindExercisesByPropertiesResponse: object = {
 };
 
-export interface ExerciseAPIService {
+export interface ExerciseAPI {
 
   createExercise(request: CreateExerciseRequest): Promise<CreateExerciseResponse>;
 
@@ -173,17 +170,17 @@ export interface ExerciseAPIService {
 
   createProperty(request: CreatePropertyRequest): Promise<CreatePropertyResponse>;
 
+  getProperties(request: GetPropertiesRequest): Promise<GetPropertiesResponse>;
+
   updateProperty(request: UpdatePropertyRequest): Promise<UpdatePropertyResponse>;
 
   deleteProperty(request: DeletePropertyRequest): Promise<DeletePropertyResponse>;
-
-  updatePropertiesOfExercise(request: UpdatePropertiesOfExerciseRequest): Promise<UpdatePropertiesOfExerciseResponse>;
 
   findExercisesByProperties(request: FindExercisesByPropertiesRequest): Promise<FindExercisesByPropertiesResponse>;
 
 }
 
-export class ExerciseAPIServiceClientImpl implements ExerciseAPIService {
+export class ExerciseAPIClientImpl implements ExerciseAPI {
 
   private readonly rpc: Rpc;
 
@@ -193,55 +190,55 @@ export class ExerciseAPIServiceClientImpl implements ExerciseAPIService {
 
   createExercise(request: CreateExerciseRequest): Promise<CreateExerciseResponse> {
     const data = CreateExerciseRequest.encode(request).finish();
-    const promise = this.rpc.request("exercise.v1.ExerciseAPIService", "createExercise", data);
+    const promise = this.rpc.request("exercise.v1.ExerciseAPI", "createExercise", data);
     return promise.then(data => CreateExerciseResponse.decode(new Reader(data)));
   }
 
   getExercise(request: GetExerciseRequest): Promise<GetExerciseResponse> {
     const data = GetExerciseRequest.encode(request).finish();
-    const promise = this.rpc.request("exercise.v1.ExerciseAPIService", "getExercise", data);
+    const promise = this.rpc.request("exercise.v1.ExerciseAPI", "getExercise", data);
     return promise.then(data => GetExerciseResponse.decode(new Reader(data)));
   }
 
   updateExercise(request: UpdateExerciseRequest): Promise<UpdateExerciseResponse> {
     const data = UpdateExerciseRequest.encode(request).finish();
-    const promise = this.rpc.request("exercise.v1.ExerciseAPIService", "updateExercise", data);
+    const promise = this.rpc.request("exercise.v1.ExerciseAPI", "updateExercise", data);
     return promise.then(data => UpdateExerciseResponse.decode(new Reader(data)));
   }
 
   deleteExercise(request: DeleteExerciseRequest): Promise<DeleteExerciseResponse> {
     const data = DeleteExerciseRequest.encode(request).finish();
-    const promise = this.rpc.request("exercise.v1.ExerciseAPIService", "deleteExercise", data);
+    const promise = this.rpc.request("exercise.v1.ExerciseAPI", "deleteExercise", data);
     return promise.then(data => DeleteExerciseResponse.decode(new Reader(data)));
   }
 
   createProperty(request: CreatePropertyRequest): Promise<CreatePropertyResponse> {
     const data = CreatePropertyRequest.encode(request).finish();
-    const promise = this.rpc.request("exercise.v1.ExerciseAPIService", "createProperty", data);
+    const promise = this.rpc.request("exercise.v1.ExerciseAPI", "createProperty", data);
     return promise.then(data => CreatePropertyResponse.decode(new Reader(data)));
+  }
+
+  getProperties(request: GetPropertiesRequest): Promise<GetPropertiesResponse> {
+    const data = GetPropertiesRequest.encode(request).finish();
+    const promise = this.rpc.request("exercise.v1.ExerciseAPI", "getProperties", data);
+    return promise.then(data => GetPropertiesResponse.decode(new Reader(data)));
   }
 
   updateProperty(request: UpdatePropertyRequest): Promise<UpdatePropertyResponse> {
     const data = UpdatePropertyRequest.encode(request).finish();
-    const promise = this.rpc.request("exercise.v1.ExerciseAPIService", "updateProperty", data);
+    const promise = this.rpc.request("exercise.v1.ExerciseAPI", "updateProperty", data);
     return promise.then(data => UpdatePropertyResponse.decode(new Reader(data)));
   }
 
   deleteProperty(request: DeletePropertyRequest): Promise<DeletePropertyResponse> {
     const data = DeletePropertyRequest.encode(request).finish();
-    const promise = this.rpc.request("exercise.v1.ExerciseAPIService", "deleteProperty", data);
+    const promise = this.rpc.request("exercise.v1.ExerciseAPI", "deleteProperty", data);
     return promise.then(data => DeletePropertyResponse.decode(new Reader(data)));
-  }
-
-  updatePropertiesOfExercise(request: UpdatePropertiesOfExerciseRequest): Promise<UpdatePropertiesOfExerciseResponse> {
-    const data = UpdatePropertiesOfExerciseRequest.encode(request).finish();
-    const promise = this.rpc.request("exercise.v1.ExerciseAPIService", "updatePropertiesOfExercise", data);
-    return promise.then(data => UpdatePropertiesOfExerciseResponse.decode(new Reader(data)));
   }
 
   findExercisesByProperties(request: FindExercisesByPropertiesRequest): Promise<FindExercisesByPropertiesResponse> {
     const data = FindExercisesByPropertiesRequest.encode(request).finish();
-    const promise = this.rpc.request("exercise.v1.ExerciseAPIService", "findExercisesByProperties", data);
+    const promise = this.rpc.request("exercise.v1.ExerciseAPI", "findExercisesByProperties", data);
     return promise.then(data => FindExercisesByPropertiesResponse.decode(new Reader(data)));
   }
 
@@ -256,7 +253,7 @@ interface Rpc {
 export const CreateExerciseRequest = {
   encode(message: CreateExerciseRequest, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.nameTKey);
-    for (const v of message.properties) {
+    for (const v of message.propertyValues) {
       ExercisePropertyValue.encode(v!, writer.uint32(18).fork()).ldelim();
     }
     return writer;
@@ -265,7 +262,7 @@ export const CreateExerciseRequest = {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseCreateExerciseRequest } as CreateExerciseRequest;
-    message.properties = [];
+    message.propertyValues = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -273,7 +270,7 @@ export const CreateExerciseRequest = {
           message.nameTKey = reader.string();
           break;
         case 2:
-          message.properties.push(ExercisePropertyValue.decode(reader, reader.uint32()));
+          message.propertyValues.push(ExercisePropertyValue.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -284,26 +281,26 @@ export const CreateExerciseRequest = {
   },
   fromJSON(object: any): CreateExerciseRequest {
     const message = { ...baseCreateExerciseRequest } as CreateExerciseRequest;
-    message.properties = [];
+    message.propertyValues = [];
     if (object.nameTKey !== undefined && object.nameTKey !== null) {
       message.nameTKey = String(object.nameTKey);
     }
-    if (object.properties !== undefined && object.properties !== null) {
-      for (const e of object.properties) {
-        message.properties.push(ExercisePropertyValue.fromJSON(e));
+    if (object.propertyValues !== undefined && object.propertyValues !== null) {
+      for (const e of object.propertyValues) {
+        message.propertyValues.push(ExercisePropertyValue.fromJSON(e));
       }
     }
     return message;
   },
   fromPartial(object: DeepPartial<CreateExerciseRequest>): CreateExerciseRequest {
     const message = { ...baseCreateExerciseRequest } as CreateExerciseRequest;
-    message.properties = [];
+    message.propertyValues = [];
     if (object.nameTKey !== undefined && object.nameTKey !== null) {
       message.nameTKey = object.nameTKey;
     }
-    if (object.properties !== undefined && object.properties !== null) {
-      for (const e of object.properties) {
-        message.properties.push(ExercisePropertyValue.fromPartial(e));
+    if (object.propertyValues !== undefined && object.propertyValues !== null) {
+      for (const e of object.propertyValues) {
+        message.propertyValues.push(ExercisePropertyValue.fromPartial(e));
       }
     }
     return message;
@@ -311,10 +308,10 @@ export const CreateExerciseRequest = {
   toJSON(message: CreateExerciseRequest): unknown {
     const obj: any = {};
     message.nameTKey !== undefined && (obj.nameTKey = message.nameTKey);
-    if (message.properties) {
-      obj.properties = message.properties.map(e => e ? ExercisePropertyValue.toJSON(e) : undefined);
+    if (message.propertyValues) {
+      obj.propertyValues = message.propertyValues.map(e => e ? ExercisePropertyValue.toJSON(e) : undefined);
     } else {
-      obj.properties = [];
+      obj.propertyValues = [];
     }
     return obj;
   },
@@ -455,12 +452,16 @@ export const UpdateExerciseRequest = {
   encode(message: UpdateExerciseRequest, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.id);
     writer.uint32(18).string(message.nameTKey);
+    for (const v of message.propertyValues) {
+      ExercisePropertyValue.encode(v!, writer.uint32(26).fork()).ldelim();
+    }
     return writer;
   },
   decode(input: Uint8Array | Reader, length?: number): UpdateExerciseRequest {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseUpdateExerciseRequest } as UpdateExerciseRequest;
+    message.propertyValues = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -469,6 +470,9 @@ export const UpdateExerciseRequest = {
           break;
         case 2:
           message.nameTKey = reader.string();
+          break;
+        case 3:
+          message.propertyValues.push(ExercisePropertyValue.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -479,21 +483,33 @@ export const UpdateExerciseRequest = {
   },
   fromJSON(object: any): UpdateExerciseRequest {
     const message = { ...baseUpdateExerciseRequest } as UpdateExerciseRequest;
+    message.propertyValues = [];
     if (object.id !== undefined && object.id !== null) {
       message.id = String(object.id);
     }
     if (object.nameTKey !== undefined && object.nameTKey !== null) {
       message.nameTKey = String(object.nameTKey);
     }
+    if (object.propertyValues !== undefined && object.propertyValues !== null) {
+      for (const e of object.propertyValues) {
+        message.propertyValues.push(ExercisePropertyValue.fromJSON(e));
+      }
+    }
     return message;
   },
   fromPartial(object: DeepPartial<UpdateExerciseRequest>): UpdateExerciseRequest {
     const message = { ...baseUpdateExerciseRequest } as UpdateExerciseRequest;
+    message.propertyValues = [];
     if (object.id !== undefined && object.id !== null) {
       message.id = object.id;
     }
     if (object.nameTKey !== undefined && object.nameTKey !== null) {
       message.nameTKey = object.nameTKey;
+    }
+    if (object.propertyValues !== undefined && object.propertyValues !== null) {
+      for (const e of object.propertyValues) {
+        message.propertyValues.push(ExercisePropertyValue.fromPartial(e));
+      }
     }
     return message;
   },
@@ -501,6 +517,11 @@ export const UpdateExerciseRequest = {
     const obj: any = {};
     message.id !== undefined && (obj.id = message.id);
     message.nameTKey !== undefined && (obj.nameTKey = message.nameTKey);
+    if (message.propertyValues) {
+      obj.propertyValues = message.propertyValues.map(e => e ? ExercisePropertyValue.toJSON(e) : undefined);
+    } else {
+      obj.propertyValues = [];
+    }
     return obj;
   },
 };
@@ -709,6 +730,94 @@ export const CreatePropertyResponse = {
   },
 };
 
+export const GetPropertiesRequest = {
+  encode(_: GetPropertiesRequest, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+  decode(input: Uint8Array | Reader, length?: number): GetPropertiesRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseGetPropertiesRequest } as GetPropertiesRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(_: any): GetPropertiesRequest {
+    const message = { ...baseGetPropertiesRequest } as GetPropertiesRequest;
+    return message;
+  },
+  fromPartial(_: DeepPartial<GetPropertiesRequest>): GetPropertiesRequest {
+    const message = { ...baseGetPropertiesRequest } as GetPropertiesRequest;
+    return message;
+  },
+  toJSON(_: GetPropertiesRequest): unknown {
+    const obj: any = {};
+    return obj;
+  },
+};
+
+export const GetPropertiesResponse = {
+  encode(message: GetPropertiesResponse, writer: Writer = Writer.create()): Writer {
+    for (const v of message.properties) {
+      ExerciseProperty.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+  decode(input: Uint8Array | Reader, length?: number): GetPropertiesResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseGetPropertiesResponse } as GetPropertiesResponse;
+    message.properties = [];
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.properties.push(ExerciseProperty.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object: any): GetPropertiesResponse {
+    const message = { ...baseGetPropertiesResponse } as GetPropertiesResponse;
+    message.properties = [];
+    if (object.properties !== undefined && object.properties !== null) {
+      for (const e of object.properties) {
+        message.properties.push(ExerciseProperty.fromJSON(e));
+      }
+    }
+    return message;
+  },
+  fromPartial(object: DeepPartial<GetPropertiesResponse>): GetPropertiesResponse {
+    const message = { ...baseGetPropertiesResponse } as GetPropertiesResponse;
+    message.properties = [];
+    if (object.properties !== undefined && object.properties !== null) {
+      for (const e of object.properties) {
+        message.properties.push(ExerciseProperty.fromPartial(e));
+      }
+    }
+    return message;
+  },
+  toJSON(message: GetPropertiesResponse): unknown {
+    const obj: any = {};
+    if (message.properties) {
+      obj.properties = message.properties.map(e => e ? ExerciseProperty.toJSON(e) : undefined);
+    } else {
+      obj.properties = [];
+    }
+    return obj;
+  },
+};
+
 export const UpdatePropertyRequest = {
   encode(message: UpdatePropertyRequest, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.nameTKey);
@@ -859,153 +968,6 @@ export const DeletePropertyResponse = {
   },
 };
 
-export const UpdatePropertiesOfExerciseRequest = {
-  encode(message: UpdatePropertiesOfExerciseRequest, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.exerciseId);
-    for (const v of message.propertiesToAdd) {
-      ExercisePropertyValue.encode(v!, writer.uint32(18).fork()).ldelim();
-    }
-    for (const v of message.propertiesToUpdate) {
-      ExercisePropertyValue.encode(v!, writer.uint32(26).fork()).ldelim();
-    }
-    for (const v of message.propertyIdsToRemove) {
-      writer.uint32(34).string(v!);
-    }
-    return writer;
-  },
-  decode(input: Uint8Array | Reader, length?: number): UpdatePropertiesOfExerciseRequest {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseUpdatePropertiesOfExerciseRequest } as UpdatePropertiesOfExerciseRequest;
-    message.propertiesToAdd = [];
-    message.propertiesToUpdate = [];
-    message.propertyIdsToRemove = [];
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.exerciseId = reader.string();
-          break;
-        case 2:
-          message.propertiesToAdd.push(ExercisePropertyValue.decode(reader, reader.uint32()));
-          break;
-        case 3:
-          message.propertiesToUpdate.push(ExercisePropertyValue.decode(reader, reader.uint32()));
-          break;
-        case 4:
-          message.propertyIdsToRemove.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object: any): UpdatePropertiesOfExerciseRequest {
-    const message = { ...baseUpdatePropertiesOfExerciseRequest } as UpdatePropertiesOfExerciseRequest;
-    message.propertiesToAdd = [];
-    message.propertiesToUpdate = [];
-    message.propertyIdsToRemove = [];
-    if (object.exerciseId !== undefined && object.exerciseId !== null) {
-      message.exerciseId = String(object.exerciseId);
-    }
-    if (object.propertiesToAdd !== undefined && object.propertiesToAdd !== null) {
-      for (const e of object.propertiesToAdd) {
-        message.propertiesToAdd.push(ExercisePropertyValue.fromJSON(e));
-      }
-    }
-    if (object.propertiesToUpdate !== undefined && object.propertiesToUpdate !== null) {
-      for (const e of object.propertiesToUpdate) {
-        message.propertiesToUpdate.push(ExercisePropertyValue.fromJSON(e));
-      }
-    }
-    if (object.propertyIdsToRemove !== undefined && object.propertyIdsToRemove !== null) {
-      for (const e of object.propertyIdsToRemove) {
-        message.propertyIdsToRemove.push(String(e));
-      }
-    }
-    return message;
-  },
-  fromPartial(object: DeepPartial<UpdatePropertiesOfExerciseRequest>): UpdatePropertiesOfExerciseRequest {
-    const message = { ...baseUpdatePropertiesOfExerciseRequest } as UpdatePropertiesOfExerciseRequest;
-    message.propertiesToAdd = [];
-    message.propertiesToUpdate = [];
-    message.propertyIdsToRemove = [];
-    if (object.exerciseId !== undefined && object.exerciseId !== null) {
-      message.exerciseId = object.exerciseId;
-    }
-    if (object.propertiesToAdd !== undefined && object.propertiesToAdd !== null) {
-      for (const e of object.propertiesToAdd) {
-        message.propertiesToAdd.push(ExercisePropertyValue.fromPartial(e));
-      }
-    }
-    if (object.propertiesToUpdate !== undefined && object.propertiesToUpdate !== null) {
-      for (const e of object.propertiesToUpdate) {
-        message.propertiesToUpdate.push(ExercisePropertyValue.fromPartial(e));
-      }
-    }
-    if (object.propertyIdsToRemove !== undefined && object.propertyIdsToRemove !== null) {
-      for (const e of object.propertyIdsToRemove) {
-        message.propertyIdsToRemove.push(e);
-      }
-    }
-    return message;
-  },
-  toJSON(message: UpdatePropertiesOfExerciseRequest): unknown {
-    const obj: any = {};
-    message.exerciseId !== undefined && (obj.exerciseId = message.exerciseId);
-    if (message.propertiesToAdd) {
-      obj.propertiesToAdd = message.propertiesToAdd.map(e => e ? ExercisePropertyValue.toJSON(e) : undefined);
-    } else {
-      obj.propertiesToAdd = [];
-    }
-    if (message.propertiesToUpdate) {
-      obj.propertiesToUpdate = message.propertiesToUpdate.map(e => e ? ExercisePropertyValue.toJSON(e) : undefined);
-    } else {
-      obj.propertiesToUpdate = [];
-    }
-    if (message.propertyIdsToRemove) {
-      obj.propertyIdsToRemove = message.propertyIdsToRemove.map(e => e);
-    } else {
-      obj.propertyIdsToRemove = [];
-    }
-    return obj;
-  },
-};
-
-export const UpdatePropertiesOfExerciseResponse = {
-  encode(_: UpdatePropertiesOfExerciseResponse, writer: Writer = Writer.create()): Writer {
-    return writer;
-  },
-  decode(input: Uint8Array | Reader, length?: number): UpdatePropertiesOfExerciseResponse {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseUpdatePropertiesOfExerciseResponse } as UpdatePropertiesOfExerciseResponse;
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(_: any): UpdatePropertiesOfExerciseResponse {
-    const message = { ...baseUpdatePropertiesOfExerciseResponse } as UpdatePropertiesOfExerciseResponse;
-    return message;
-  },
-  fromPartial(_: DeepPartial<UpdatePropertiesOfExerciseResponse>): UpdatePropertiesOfExerciseResponse {
-    const message = { ...baseUpdatePropertiesOfExerciseResponse } as UpdatePropertiesOfExerciseResponse;
-    return message;
-  },
-  toJSON(_: UpdatePropertiesOfExerciseResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-};
-
 export const FindExercisesByPropertiesRequest = {
   encode(message: FindExercisesByPropertiesRequest, writer: Writer = Writer.create()): Writer {
     for (const v of message.orConditions) {
@@ -1121,15 +1083,7 @@ export const FindExercisesByPropertiesRequest_OrCondition = {
 export const FindExercisesByPropertiesRequest_OrCondition_AndCondition = {
   encode(message: FindExercisesByPropertiesRequest_OrCondition_AndCondition, writer: Writer = Writer.create()): Writer {
     writer.uint32(26).string(message.propertyId);
-    if (message.propertyValue?.$case === 'boolValue') {
-      writer.uint32(32).bool(message.propertyValue.boolValue);
-    }
-    if (message.propertyValue?.$case === 'stringValue') {
-      writer.uint32(42).string(message.propertyValue.stringValue);
-    }
-    if (message.propertyValue?.$case === 'intValue') {
-      writer.uint32(48).int32(message.propertyValue.intValue);
-    }
+    writer.uint32(34).string(message.serializedPropertyValue);
     return writer;
   },
   decode(input: Uint8Array | Reader, length?: number): FindExercisesByPropertiesRequest_OrCondition_AndCondition {
@@ -1143,13 +1097,7 @@ export const FindExercisesByPropertiesRequest_OrCondition_AndCondition = {
           message.propertyId = reader.string();
           break;
         case 4:
-          message.propertyValue = {$case: 'boolValue', boolValue: reader.bool()};
-          break;
-        case 5:
-          message.propertyValue = {$case: 'stringValue', stringValue: reader.string()};
-          break;
-        case 6:
-          message.propertyValue = {$case: 'intValue', intValue: reader.int32()};
+          message.serializedPropertyValue = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -1163,14 +1111,8 @@ export const FindExercisesByPropertiesRequest_OrCondition_AndCondition = {
     if (object.propertyId !== undefined && object.propertyId !== null) {
       message.propertyId = String(object.propertyId);
     }
-    if (object.boolValue !== undefined && object.boolValue !== null) {
-      message.propertyValue = {$case: 'boolValue', boolValue: Boolean(object.boolValue)};
-    }
-    if (object.stringValue !== undefined && object.stringValue !== null) {
-      message.propertyValue = {$case: 'stringValue', stringValue: String(object.stringValue)};
-    }
-    if (object.intValue !== undefined && object.intValue !== null) {
-      message.propertyValue = {$case: 'intValue', intValue: Number(object.intValue)};
+    if (object.serializedPropertyValue !== undefined && object.serializedPropertyValue !== null) {
+      message.serializedPropertyValue = String(object.serializedPropertyValue);
     }
     return message;
   },
@@ -1179,23 +1121,15 @@ export const FindExercisesByPropertiesRequest_OrCondition_AndCondition = {
     if (object.propertyId !== undefined && object.propertyId !== null) {
       message.propertyId = object.propertyId;
     }
-    if (object.propertyValue?.$case === 'boolValue' && object.propertyValue?.boolValue !== undefined && object.propertyValue?.boolValue !== null) {
-      message.propertyValue = {$case: 'boolValue', boolValue: object.propertyValue.boolValue};
-    }
-    if (object.propertyValue?.$case === 'stringValue' && object.propertyValue?.stringValue !== undefined && object.propertyValue?.stringValue !== null) {
-      message.propertyValue = {$case: 'stringValue', stringValue: object.propertyValue.stringValue};
-    }
-    if (object.propertyValue?.$case === 'intValue' && object.propertyValue?.intValue !== undefined && object.propertyValue?.intValue !== null) {
-      message.propertyValue = {$case: 'intValue', intValue: object.propertyValue.intValue};
+    if (object.serializedPropertyValue !== undefined && object.serializedPropertyValue !== null) {
+      message.serializedPropertyValue = object.serializedPropertyValue;
     }
     return message;
   },
   toJSON(message: FindExercisesByPropertiesRequest_OrCondition_AndCondition): unknown {
     const obj: any = {};
     message.propertyId !== undefined && (obj.propertyId = message.propertyId);
-    message.propertyValue?.$case === 'boolValue' && (obj.boolValue = message.propertyValue?.boolValue);
-    message.propertyValue?.$case === 'stringValue' && (obj.stringValue = message.propertyValue?.stringValue);
-    message.propertyValue?.$case === 'intValue' && (obj.intValue = message.propertyValue?.intValue);
+    message.serializedPropertyValue !== undefined && (obj.serializedPropertyValue = message.serializedPropertyValue);
     return obj;
   },
 };

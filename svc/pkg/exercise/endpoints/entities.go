@@ -4,7 +4,7 @@ import "github.com/zd333/gymio/svc/pkg/exercise/entities"
 
 type CreateExerciseRequest struct {
 	NameTKey string
-	Props    []entities.PropertyValue
+	PropVals []entities.PropertyValue
 }
 
 type CreateExerciseResponse struct {
@@ -22,6 +22,7 @@ type GetExerciseResponse struct {
 type UpdateExerciseRequest struct {
 	ID       string
 	NameTKey string
+	PropVals []entities.PropertyValue
 }
 
 type UpdateExerciseResponse struct {
@@ -43,6 +44,12 @@ type CreatePropertyResponse struct {
 	ID string
 }
 
+type GetPropertiesRequest struct{}
+
+type GetPropertiesResponse struct {
+	Props []entities.Property
+}
+
 type UpdatePropertyRequest struct {
 	ID       string
 	NameTKey string
@@ -58,20 +65,10 @@ type DeletePropertyRequest struct {
 type DeletePropertyResponse struct {
 }
 
-type UpdatePropertiesOfExerciseRequest struct {
-	ExerciseID      string
-	PropsToAdd      []entities.PropertyValue
-	PropsToUpdate   []entities.PropertyValue
-	PropIDsToRemove []string
-}
-
-type UpdatePropertiesOfExerciseResponse struct {
-}
-
 type FindExercisesByPropertiesRequest struct {
-	Conditions entities.FindExercisesConditions
+	OrConditions []entities.FindExercisesOrCondition
 }
 
 type FindExercisesByPropertiesResponse struct {
-	Exercises []*entities.Exercise
+	Exercises []entities.Exercise
 }

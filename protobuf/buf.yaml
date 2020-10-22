@@ -4,3 +4,5 @@ build:
 breaking:
   use:
     - WIRE_JSON
+lint:
+  service_suffix: API

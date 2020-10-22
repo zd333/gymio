@@ -7,11 +7,12 @@
     "build-and-save-new-image": "buf image build -o image.bin",
     "lint": "buf check lint",
     "check-breaking-changes": "buf check breaking --against-input image.bin",
-    "generate-ts": "protoc --experimental_allow_proto3_optional --descriptor_set_in=./image.bin --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_opt=lowerCaseServiceMethods=true,oneof=unions,returnObservable=true --ts_proto_out=./gen/ts $(buf ls-files --input ./image.bin)",
-    "generate-go-messages": "protoc --experimental_allow_proto3_optional --descriptor_set_in=./image.bin --go_out=./gen/go $(buf ls-files --input ./image.bin)",
-    "generate-go-services": "protoc --experimental_allow_proto3_optional --descriptor_set_in=./image.bin --go-grpc_out=./gen/go $(buf ls-files --input ./image.bin)",
+    "generate-ts": "protoc --experimental_allow_proto3_optional --descriptor_set_in=./image.bin --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_opt=lowerCaseServiceMethods=true,oneof=unions,returnObservable=true --ts_proto_out=../ts/gen $(buf ls-files --input ./image.bin)",
+    "generate-go-messages": "protoc --experimental_allow_proto3_optional --descriptor_set_in=./image.bin --go_out=../svc/gen $(buf ls-files --input ./image.bin)",
+    "generate-go-services": "protoc --experimental_allow_proto3_optional --descriptor_set_in=./image.bin --go-grpc_out=../svc/gen $(buf ls-files --input ./image.bin)",
     "generate-go": "npm run generate-go-messages && npm run generate-go-services",
-    "generate": "npm run lint && npm run check-breaking-changes && npm run build-and-save-new-image && npm run generate-go && npm run generate-ts"
+    "generate-skip-checks": "npm run build-and-save-new-image && npm run generate-go && npm run generate-ts",
+    "generate": "npm run lint && npm run check-breaking-changes && npm run generate-skip-checks"
   },
   "author": "Alexander Changli",
   "dependencies": {

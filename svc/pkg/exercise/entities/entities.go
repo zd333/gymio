@@ -20,6 +20,7 @@ type PropertyType int
 const (
 	PropertyTypeBool PropertyType = iota + 1
 	PropertyTypeString
+	PropertyTypeStringList
 	PropertyTypeInt
 	PropertyTypeIntPair
 	PropertyTypeMap
@@ -35,29 +36,25 @@ type PropertyValue struct {
 	Value    PropertyValueUnion
 }
 
-// TODO: too brute force, refactor
+// TODO: too brute force, refactor?
 type PropertyValueUnion struct {
 	BoolVal    bool
 	StrVal     string
-	IntVal     int
-	IntPairVal struct {
-		Higher int
-		Lower  int
-	}
-	MapVal map[string]PropertyValueUnion
+	StrListVal []string
+	IntVal     int32
+	IntPairVal IntPair
 }
 
-type FindExercisesConditions struct {
-	Or [][]AndCondition
+type IntPair struct {
+	Higher int32
+	Lower  int32
 }
 
-type AndCondition struct {
-	PropID string
+type FindExercisesOrCondition struct {
+	AndConditions []FindExercisesAndCondition
+}
 
-	// TODO: replace with `PropertyValueUnion`?
-	PropValUnion struct {
-		BoolVal bool
-		StrVal  string
-		IntVal  int
-	}
+type FindExercisesAndCondition struct {
+	PropID            string
+	SerializedPropVal string
 }

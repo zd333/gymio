@@ -15,17 +15,17 @@ message ExercisePropertyValueUnion {
   oneof either {
     bool bool_value = 1;
     string string_value = 2;
-    int32 int_value = 3;
-    IntPairExercisePropertyValue int_pair_value = 4;
-    MapExercisePropertyValue map_value = 5;
+    StringListExercisePropertyValue string_list_value = 3;
+    int32 int_value = 4;
+    IntPairExercisePropertyValue int_pair_value = 5;
   }
+}
+
+message StringListExercisePropertyValue {
+  repeated string values = 1;
 }
 
 message IntPairExercisePropertyValue {
   int32 lover_value = 1;
   int32 higher_value = 2;
-}
-
-message MapExercisePropertyValue {
-  map<string, ExercisePropertyValueUnion> map = 1;
 }

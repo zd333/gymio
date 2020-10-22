@@ -18,9 +18,9 @@ export enum PropertyType {
   PROPERTY_TYPE_UNSPECIFIED = 0,
   PROPERTY_TYPE_BOOL = 1,
   PROPERTY_TYPE_STRING = 2,
-  PROPERTY_TYPE_INT = 3,
-  PROPERTY_TYPE_INT_PAIR = 4,
-  PROPERTY_TYPE_MAP = 5,
+  PROPERTY_TYPE_STRING_LIST = 3,
+  PROPERTY_TYPE_INT = 4,
+  PROPERTY_TYPE_INT_PAIR = 5,
   UNRECOGNIZED = -1,
 }
 
@@ -36,14 +36,14 @@ export function propertyTypeFromJSON(object: any): PropertyType {
     case "PROPERTY_TYPE_STRING":
       return PropertyType.PROPERTY_TYPE_STRING;
     case 3:
+    case "PROPERTY_TYPE_STRING_LIST":
+      return PropertyType.PROPERTY_TYPE_STRING_LIST;
+    case 4:
     case "PROPERTY_TYPE_INT":
       return PropertyType.PROPERTY_TYPE_INT;
-    case 4:
+    case 5:
     case "PROPERTY_TYPE_INT_PAIR":
       return PropertyType.PROPERTY_TYPE_INT_PAIR;
-    case 5:
-    case "PROPERTY_TYPE_MAP":
-      return PropertyType.PROPERTY_TYPE_MAP;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -59,12 +59,12 @@ export function propertyTypeToJSON(object: PropertyType): string {
       return "PROPERTY_TYPE_BOOL";
     case PropertyType.PROPERTY_TYPE_STRING:
       return "PROPERTY_TYPE_STRING";
+    case PropertyType.PROPERTY_TYPE_STRING_LIST:
+      return "PROPERTY_TYPE_STRING_LIST";
     case PropertyType.PROPERTY_TYPE_INT:
       return "PROPERTY_TYPE_INT";
     case PropertyType.PROPERTY_TYPE_INT_PAIR:
       return "PROPERTY_TYPE_INT_PAIR";
-    case PropertyType.PROPERTY_TYPE_MAP:
-      return "PROPERTY_TYPE_MAP";
     default:
       return "UNKNOWN";
   }

@@ -13,163 +13,163 @@ import (
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion7
 
-// ExerciseAPIServiceClient is the client API for ExerciseAPIService service.
+// ExerciseAPIClient is the client API for ExerciseAPI service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ExerciseAPIServiceClient interface {
+type ExerciseAPIClient interface {
 	CreateExercise(ctx context.Context, in *CreateExerciseRequest, opts ...grpc.CallOption) (*CreateExerciseResponse, error)
 	GetExercise(ctx context.Context, in *GetExerciseRequest, opts ...grpc.CallOption) (*GetExerciseResponse, error)
 	UpdateExercise(ctx context.Context, in *UpdateExerciseRequest, opts ...grpc.CallOption) (*UpdateExerciseResponse, error)
 	DeleteExercise(ctx context.Context, in *DeleteExerciseRequest, opts ...grpc.CallOption) (*DeleteExerciseResponse, error)
 	CreateProperty(ctx context.Context, in *CreatePropertyRequest, opts ...grpc.CallOption) (*CreatePropertyResponse, error)
+	GetProperties(ctx context.Context, in *GetPropertiesRequest, opts ...grpc.CallOption) (*GetPropertiesResponse, error)
 	UpdateProperty(ctx context.Context, in *UpdatePropertyRequest, opts ...grpc.CallOption) (*UpdatePropertyResponse, error)
 	DeleteProperty(ctx context.Context, in *DeletePropertyRequest, opts ...grpc.CallOption) (*DeletePropertyResponse, error)
-	UpdatePropertiesOfExercise(ctx context.Context, in *UpdatePropertiesOfExerciseRequest, opts ...grpc.CallOption) (*UpdatePropertiesOfExerciseResponse, error)
 	FindExercisesByProperties(ctx context.Context, in *FindExercisesByPropertiesRequest, opts ...grpc.CallOption) (*FindExercisesByPropertiesResponse, error)
 }
 
-type exerciseAPIServiceClient struct {
+type exerciseAPIClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewExerciseAPIServiceClient(cc grpc.ClientConnInterface) ExerciseAPIServiceClient {
-	return &exerciseAPIServiceClient{cc}
+func NewExerciseAPIClient(cc grpc.ClientConnInterface) ExerciseAPIClient {
+	return &exerciseAPIClient{cc}
 }
 
-var exerciseAPIServiceCreateExerciseStreamDesc = &grpc.StreamDesc{
+var exerciseAPICreateExerciseStreamDesc = &grpc.StreamDesc{
 	StreamName: "CreateExercise",
 }
 
-func (c *exerciseAPIServiceClient) CreateExercise(ctx context.Context, in *CreateExerciseRequest, opts ...grpc.CallOption) (*CreateExerciseResponse, error) {
+func (c *exerciseAPIClient) CreateExercise(ctx context.Context, in *CreateExerciseRequest, opts ...grpc.CallOption) (*CreateExerciseResponse, error) {
 	out := new(CreateExerciseResponse)
-	err := c.cc.Invoke(ctx, "/exercise.v1.ExerciseAPIService/CreateExercise", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/exercise.v1.ExerciseAPI/CreateExercise", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-var exerciseAPIServiceGetExerciseStreamDesc = &grpc.StreamDesc{
+var exerciseAPIGetExerciseStreamDesc = &grpc.StreamDesc{
 	StreamName: "GetExercise",
 }
 
-func (c *exerciseAPIServiceClient) GetExercise(ctx context.Context, in *GetExerciseRequest, opts ...grpc.CallOption) (*GetExerciseResponse, error) {
+func (c *exerciseAPIClient) GetExercise(ctx context.Context, in *GetExerciseRequest, opts ...grpc.CallOption) (*GetExerciseResponse, error) {
 	out := new(GetExerciseResponse)
-	err := c.cc.Invoke(ctx, "/exercise.v1.ExerciseAPIService/GetExercise", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/exercise.v1.ExerciseAPI/GetExercise", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-var exerciseAPIServiceUpdateExerciseStreamDesc = &grpc.StreamDesc{
+var exerciseAPIUpdateExerciseStreamDesc = &grpc.StreamDesc{
 	StreamName: "UpdateExercise",
 }
 
-func (c *exerciseAPIServiceClient) UpdateExercise(ctx context.Context, in *UpdateExerciseRequest, opts ...grpc.CallOption) (*UpdateExerciseResponse, error) {
+func (c *exerciseAPIClient) UpdateExercise(ctx context.Context, in *UpdateExerciseRequest, opts ...grpc.CallOption) (*UpdateExerciseResponse, error) {
 	out := new(UpdateExerciseResponse)
-	err := c.cc.Invoke(ctx, "/exercise.v1.ExerciseAPIService/UpdateExercise", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/exercise.v1.ExerciseAPI/UpdateExercise", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-var exerciseAPIServiceDeleteExerciseStreamDesc = &grpc.StreamDesc{
+var exerciseAPIDeleteExerciseStreamDesc = &grpc.StreamDesc{
 	StreamName: "DeleteExercise",
 }
 
-func (c *exerciseAPIServiceClient) DeleteExercise(ctx context.Context, in *DeleteExerciseRequest, opts ...grpc.CallOption) (*DeleteExerciseResponse, error) {
+func (c *exerciseAPIClient) DeleteExercise(ctx context.Context, in *DeleteExerciseRequest, opts ...grpc.CallOption) (*DeleteExerciseResponse, error) {
 	out := new(DeleteExerciseResponse)
-	err := c.cc.Invoke(ctx, "/exercise.v1.ExerciseAPIService/DeleteExercise", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/exercise.v1.ExerciseAPI/DeleteExercise", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-var exerciseAPIServiceCreatePropertyStreamDesc = &grpc.StreamDesc{
+var exerciseAPICreatePropertyStreamDesc = &grpc.StreamDesc{
 	StreamName: "CreateProperty",
 }
 
-func (c *exerciseAPIServiceClient) CreateProperty(ctx context.Context, in *CreatePropertyRequest, opts ...grpc.CallOption) (*CreatePropertyResponse, error) {
+func (c *exerciseAPIClient) CreateProperty(ctx context.Context, in *CreatePropertyRequest, opts ...grpc.CallOption) (*CreatePropertyResponse, error) {
 	out := new(CreatePropertyResponse)
-	err := c.cc.Invoke(ctx, "/exercise.v1.ExerciseAPIService/CreateProperty", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/exercise.v1.ExerciseAPI/CreateProperty", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-var exerciseAPIServiceUpdatePropertyStreamDesc = &grpc.StreamDesc{
+var exerciseAPIGetPropertiesStreamDesc = &grpc.StreamDesc{
+	StreamName: "GetProperties",
+}
+
+func (c *exerciseAPIClient) GetProperties(ctx context.Context, in *GetPropertiesRequest, opts ...grpc.CallOption) (*GetPropertiesResponse, error) {
+	out := new(GetPropertiesResponse)
+	err := c.cc.Invoke(ctx, "/exercise.v1.ExerciseAPI/GetProperties", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+var exerciseAPIUpdatePropertyStreamDesc = &grpc.StreamDesc{
 	StreamName: "UpdateProperty",
 }
 
-func (c *exerciseAPIServiceClient) UpdateProperty(ctx context.Context, in *UpdatePropertyRequest, opts ...grpc.CallOption) (*UpdatePropertyResponse, error) {
+func (c *exerciseAPIClient) UpdateProperty(ctx context.Context, in *UpdatePropertyRequest, opts ...grpc.CallOption) (*UpdatePropertyResponse, error) {
 	out := new(UpdatePropertyResponse)
-	err := c.cc.Invoke(ctx, "/exercise.v1.ExerciseAPIService/UpdateProperty", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/exercise.v1.ExerciseAPI/UpdateProperty", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-var exerciseAPIServiceDeletePropertyStreamDesc = &grpc.StreamDesc{
+var exerciseAPIDeletePropertyStreamDesc = &grpc.StreamDesc{
 	StreamName: "DeleteProperty",
 }
 
-func (c *exerciseAPIServiceClient) DeleteProperty(ctx context.Context, in *DeletePropertyRequest, opts ...grpc.CallOption) (*DeletePropertyResponse, error) {
+func (c *exerciseAPIClient) DeleteProperty(ctx context.Context, in *DeletePropertyRequest, opts ...grpc.CallOption) (*DeletePropertyResponse, error) {
 	out := new(DeletePropertyResponse)
-	err := c.cc.Invoke(ctx, "/exercise.v1.ExerciseAPIService/DeleteProperty", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/exercise.v1.ExerciseAPI/DeleteProperty", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-var exerciseAPIServiceUpdatePropertiesOfExerciseStreamDesc = &grpc.StreamDesc{
-	StreamName: "UpdatePropertiesOfExercise",
-}
-
-func (c *exerciseAPIServiceClient) UpdatePropertiesOfExercise(ctx context.Context, in *UpdatePropertiesOfExerciseRequest, opts ...grpc.CallOption) (*UpdatePropertiesOfExerciseResponse, error) {
-	out := new(UpdatePropertiesOfExerciseResponse)
-	err := c.cc.Invoke(ctx, "/exercise.v1.ExerciseAPIService/UpdatePropertiesOfExercise", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-var exerciseAPIServiceFindExercisesByPropertiesStreamDesc = &grpc.StreamDesc{
+var exerciseAPIFindExercisesByPropertiesStreamDesc = &grpc.StreamDesc{
 	StreamName: "FindExercisesByProperties",
 }
 
-func (c *exerciseAPIServiceClient) FindExercisesByProperties(ctx context.Context, in *FindExercisesByPropertiesRequest, opts ...grpc.CallOption) (*FindExercisesByPropertiesResponse, error) {
+func (c *exerciseAPIClient) FindExercisesByProperties(ctx context.Context, in *FindExercisesByPropertiesRequest, opts ...grpc.CallOption) (*FindExercisesByPropertiesResponse, error) {
 	out := new(FindExercisesByPropertiesResponse)
-	err := c.cc.Invoke(ctx, "/exercise.v1.ExerciseAPIService/FindExercisesByProperties", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/exercise.v1.ExerciseAPI/FindExercisesByProperties", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ExerciseAPIServiceService is the service API for ExerciseAPIService service.
+// ExerciseAPIService is the service API for ExerciseAPI service.
 // Fields should be assigned to their respective handler implementations only before
-// RegisterExerciseAPIServiceService is called.  Any unassigned fields will result in the
+// RegisterExerciseAPIService is called.  Any unassigned fields will result in the
 // handler for that method returning an Unimplemented error.
-type ExerciseAPIServiceService struct {
-	CreateExercise             func(context.Context, *CreateExerciseRequest) (*CreateExerciseResponse, error)
-	GetExercise                func(context.Context, *GetExerciseRequest) (*GetExerciseResponse, error)
-	UpdateExercise             func(context.Context, *UpdateExerciseRequest) (*UpdateExerciseResponse, error)
-	DeleteExercise             func(context.Context, *DeleteExerciseRequest) (*DeleteExerciseResponse, error)
-	CreateProperty             func(context.Context, *CreatePropertyRequest) (*CreatePropertyResponse, error)
-	UpdateProperty             func(context.Context, *UpdatePropertyRequest) (*UpdatePropertyResponse, error)
-	DeleteProperty             func(context.Context, *DeletePropertyRequest) (*DeletePropertyResponse, error)
-	UpdatePropertiesOfExercise func(context.Context, *UpdatePropertiesOfExerciseRequest) (*UpdatePropertiesOfExerciseResponse, error)
-	FindExercisesByProperties  func(context.Context, *FindExercisesByPropertiesRequest) (*FindExercisesByPropertiesResponse, error)
+type ExerciseAPIService struct {
+	CreateExercise            func(context.Context, *CreateExerciseRequest) (*CreateExerciseResponse, error)
+	GetExercise               func(context.Context, *GetExerciseRequest) (*GetExerciseResponse, error)
+	UpdateExercise            func(context.Context, *UpdateExerciseRequest) (*UpdateExerciseResponse, error)
+	DeleteExercise            func(context.Context, *DeleteExerciseRequest) (*DeleteExerciseResponse, error)
+	CreateProperty            func(context.Context, *CreatePropertyRequest) (*CreatePropertyResponse, error)
+	GetProperties             func(context.Context, *GetPropertiesRequest) (*GetPropertiesResponse, error)
+	UpdateProperty            func(context.Context, *UpdatePropertyRequest) (*UpdatePropertyResponse, error)
+	DeleteProperty            func(context.Context, *DeletePropertyRequest) (*DeletePropertyResponse, error)
+	FindExercisesByProperties func(context.Context, *FindExercisesByPropertiesRequest) (*FindExercisesByPropertiesResponse, error)
 }
 
-func (s *ExerciseAPIServiceService) createExercise(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func (s *ExerciseAPIService) createExercise(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateExerciseRequest)
 	if err := dec(in); err != nil {
 		return nil, err
@@ -179,14 +179,14 @@ func (s *ExerciseAPIServiceService) createExercise(_ interface{}, ctx context.Co
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     s,
-		FullMethod: "/exercise.v1.ExerciseAPIService/CreateExercise",
+		FullMethod: "/exercise.v1.ExerciseAPI/CreateExercise",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return s.CreateExercise(ctx, req.(*CreateExerciseRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
-func (s *ExerciseAPIServiceService) getExercise(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func (s *ExerciseAPIService) getExercise(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetExerciseRequest)
 	if err := dec(in); err != nil {
 		return nil, err
@@ -196,14 +196,14 @@ func (s *ExerciseAPIServiceService) getExercise(_ interface{}, ctx context.Conte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     s,
-		FullMethod: "/exercise.v1.ExerciseAPIService/GetExercise",
+		FullMethod: "/exercise.v1.ExerciseAPI/GetExercise",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return s.GetExercise(ctx, req.(*GetExerciseRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
-func (s *ExerciseAPIServiceService) updateExercise(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func (s *ExerciseAPIService) updateExercise(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateExerciseRequest)
 	if err := dec(in); err != nil {
 		return nil, err
@@ -213,14 +213,14 @@ func (s *ExerciseAPIServiceService) updateExercise(_ interface{}, ctx context.Co
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     s,
-		FullMethod: "/exercise.v1.ExerciseAPIService/UpdateExercise",
+		FullMethod: "/exercise.v1.ExerciseAPI/UpdateExercise",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return s.UpdateExercise(ctx, req.(*UpdateExerciseRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
-func (s *ExerciseAPIServiceService) deleteExercise(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func (s *ExerciseAPIService) deleteExercise(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteExerciseRequest)
 	if err := dec(in); err != nil {
 		return nil, err
@@ -230,14 +230,14 @@ func (s *ExerciseAPIServiceService) deleteExercise(_ interface{}, ctx context.Co
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     s,
-		FullMethod: "/exercise.v1.ExerciseAPIService/DeleteExercise",
+		FullMethod: "/exercise.v1.ExerciseAPI/DeleteExercise",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return s.DeleteExercise(ctx, req.(*DeleteExerciseRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
-func (s *ExerciseAPIServiceService) createProperty(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func (s *ExerciseAPIService) createProperty(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreatePropertyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
@@ -247,14 +247,31 @@ func (s *ExerciseAPIServiceService) createProperty(_ interface{}, ctx context.Co
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     s,
-		FullMethod: "/exercise.v1.ExerciseAPIService/CreateProperty",
+		FullMethod: "/exercise.v1.ExerciseAPI/CreateProperty",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return s.CreateProperty(ctx, req.(*CreatePropertyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
-func (s *ExerciseAPIServiceService) updateProperty(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func (s *ExerciseAPIService) getProperties(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPropertiesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return s.GetProperties(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     s,
+		FullMethod: "/exercise.v1.ExerciseAPI/GetProperties",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return s.GetProperties(ctx, req.(*GetPropertiesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+func (s *ExerciseAPIService) updateProperty(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdatePropertyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
@@ -264,14 +281,14 @@ func (s *ExerciseAPIServiceService) updateProperty(_ interface{}, ctx context.Co
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     s,
-		FullMethod: "/exercise.v1.ExerciseAPIService/UpdateProperty",
+		FullMethod: "/exercise.v1.ExerciseAPI/UpdateProperty",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return s.UpdateProperty(ctx, req.(*UpdatePropertyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
-func (s *ExerciseAPIServiceService) deleteProperty(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func (s *ExerciseAPIService) deleteProperty(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeletePropertyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
@@ -281,31 +298,14 @@ func (s *ExerciseAPIServiceService) deleteProperty(_ interface{}, ctx context.Co
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     s,
-		FullMethod: "/exercise.v1.ExerciseAPIService/DeleteProperty",
+		FullMethod: "/exercise.v1.ExerciseAPI/DeleteProperty",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return s.DeleteProperty(ctx, req.(*DeletePropertyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
-func (s *ExerciseAPIServiceService) updatePropertiesOfExercise(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdatePropertiesOfExerciseRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return s.UpdatePropertiesOfExercise(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     s,
-		FullMethod: "/exercise.v1.ExerciseAPIService/UpdatePropertiesOfExercise",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return s.UpdatePropertiesOfExercise(ctx, req.(*UpdatePropertiesOfExerciseRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-func (s *ExerciseAPIServiceService) findExercisesByProperties(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func (s *ExerciseAPIService) findExercisesByProperties(_ interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(FindExercisesByPropertiesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
@@ -315,7 +315,7 @@ func (s *ExerciseAPIServiceService) findExercisesByProperties(_ interface{}, ctx
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     s,
-		FullMethod: "/exercise.v1.ExerciseAPIService/FindExercisesByProperties",
+		FullMethod: "/exercise.v1.ExerciseAPI/FindExercisesByProperties",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return s.FindExercisesByProperties(ctx, req.(*FindExercisesByPropertiesRequest))
@@ -323,8 +323,8 @@ func (s *ExerciseAPIServiceService) findExercisesByProperties(_ interface{}, ctx
 	return interceptor(ctx, in, info, handler)
 }
 
-// RegisterExerciseAPIServiceService registers a service implementation with a gRPC server.
-func RegisterExerciseAPIServiceService(s grpc.ServiceRegistrar, srv *ExerciseAPIServiceService) {
+// RegisterExerciseAPIService registers a service implementation with a gRPC server.
+func RegisterExerciseAPIService(s grpc.ServiceRegistrar, srv *ExerciseAPIService) {
 	srvCopy := *srv
 	if srvCopy.CreateExercise == nil {
 		srvCopy.CreateExercise = func(context.Context, *CreateExerciseRequest) (*CreateExerciseResponse, error) {
@@ -351,6 +351,11 @@ func RegisterExerciseAPIServiceService(s grpc.ServiceRegistrar, srv *ExerciseAPI
 			return nil, status.Errorf(codes.Unimplemented, "method CreateProperty not implemented")
 		}
 	}
+	if srvCopy.GetProperties == nil {
+		srvCopy.GetProperties = func(context.Context, *GetPropertiesRequest) (*GetPropertiesResponse, error) {
+			return nil, status.Errorf(codes.Unimplemented, "method GetProperties not implemented")
+		}
+	}
 	if srvCopy.UpdateProperty == nil {
 		srvCopy.UpdateProperty = func(context.Context, *UpdatePropertyRequest) (*UpdatePropertyResponse, error) {
 			return nil, status.Errorf(codes.Unimplemented, "method UpdateProperty not implemented")
@@ -361,18 +366,13 @@ func RegisterExerciseAPIServiceService(s grpc.ServiceRegistrar, srv *ExerciseAPI
 			return nil, status.Errorf(codes.Unimplemented, "method DeleteProperty not implemented")
 		}
 	}
-	if srvCopy.UpdatePropertiesOfExercise == nil {
-		srvCopy.UpdatePropertiesOfExercise = func(context.Context, *UpdatePropertiesOfExerciseRequest) (*UpdatePropertiesOfExerciseResponse, error) {
-			return nil, status.Errorf(codes.Unimplemented, "method UpdatePropertiesOfExercise not implemented")
-		}
-	}
 	if srvCopy.FindExercisesByProperties == nil {
 		srvCopy.FindExercisesByProperties = func(context.Context, *FindExercisesByPropertiesRequest) (*FindExercisesByPropertiesResponse, error) {
 			return nil, status.Errorf(codes.Unimplemented, "method FindExercisesByProperties not implemented")
 		}
 	}
 	sd := grpc.ServiceDesc{
-		ServiceName: "exercise.v1.ExerciseAPIService",
+		ServiceName: "exercise.v1.ExerciseAPI",
 		Methods: []grpc.MethodDesc{
 			{
 				MethodName: "CreateExercise",
@@ -395,16 +395,16 @@ func RegisterExerciseAPIServiceService(s grpc.ServiceRegistrar, srv *ExerciseAPI
 				Handler:    srvCopy.createProperty,
 			},
 			{
+				MethodName: "GetProperties",
+				Handler:    srvCopy.getProperties,
+			},
+			{
 				MethodName: "UpdateProperty",
 				Handler:    srvCopy.updateProperty,
 			},
 			{
 				MethodName: "DeleteProperty",
 				Handler:    srvCopy.deleteProperty,
-			},
-			{
-				MethodName: "UpdatePropertiesOfExercise",
-				Handler:    srvCopy.updatePropertiesOfExercise,
 			},
 			{
 				MethodName: "FindExercisesByProperties",

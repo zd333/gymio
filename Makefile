@@ -1,6 +1,9 @@
 generate-proto: ## Generate protobuf libraries
 	cd protobuf && npm run generate
 
+generate-proto-skip-checks: ## Generate protobuf libraries skipping lint and breaking changes verificaion
+	cd protobuf && npm run generate-skip-checks
+
 install-exercise-api: ## Build and install exercise API app
 	make -C svc install-exercise-api
 

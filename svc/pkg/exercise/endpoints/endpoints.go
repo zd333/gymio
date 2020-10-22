@@ -9,28 +9,28 @@ import (
 )
 
 type Endpoints struct {
-	CreateExercise             endpoint.Endpoint
-	GetExercise                endpoint.Endpoint
-	UpdateExercise             endpoint.Endpoint
-	DeleteExercise             endpoint.Endpoint
-	CreateProperty             endpoint.Endpoint
-	UpdateProperty             endpoint.Endpoint
-	DeleteProperty             endpoint.Endpoint
-	UpdatePropertiesOfExercise endpoint.Endpoint
-	FindExercisesByProperties  endpoint.Endpoint
+	CreateExercise            endpoint.Endpoint
+	GetExercise               endpoint.Endpoint
+	UpdateExercise            endpoint.Endpoint
+	DeleteExercise            endpoint.Endpoint
+	CreateProperty            endpoint.Endpoint
+	GetProperties             endpoint.Endpoint
+	UpdateProperty            endpoint.Endpoint
+	DeleteProperty            endpoint.Endpoint
+	FindExercisesByProperties endpoint.Endpoint
 }
 
 func New(svc service.Service) *Endpoints {
 	return &Endpoints{
-		CreateExercise:             makeCreateExerciseEndpoint(svc),
-		GetExercise:                makeGetExerciseEndpoint(svc),
-		UpdateExercise:             makeUpdateExerciseEndpoint(svc),
-		DeleteExercise:             makeDeleteExerciseEndpoint(svc),
-		CreateProperty:             makeCreatePropertyEndpoint(svc),
-		UpdateProperty:             makeUpdatePropertyEndpoint(svc),
-		DeleteProperty:             makeDeletePropertyEndpoint(svc),
-		UpdatePropertiesOfExercise: makeUpdatePropertiesOfExerciseEndpoint(svc),
-		FindExercisesByProperties:  makeFindExercisesByPropertiesEndpoint(svc),
+		CreateExercise:            makeCreateExerciseEndpoint(svc),
+		GetExercise:               makeGetExerciseEndpoint(svc),
+		UpdateExercise:            makeUpdateExerciseEndpoint(svc),
+		DeleteExercise:            makeDeleteExerciseEndpoint(svc),
+		GetProperties:             makeGetPropertiesEndpoint(svc),
+		CreateProperty:            makeCreatePropertyEndpoint(svc),
+		UpdateProperty:            makeUpdatePropertyEndpoint(svc),
+		DeleteProperty:            makeDeletePropertyEndpoint(svc),
+		FindExercisesByProperties: makeFindExercisesByPropertiesEndpoint(svc),
 	}
 }
 
@@ -39,7 +39,7 @@ func makeCreateExerciseEndpoint(svc service.Service) endpoint.Endpoint {
 		req := request.(*CreateExerciseRequest)
 		data := entities.ExerciseData{
 			NameTKey: req.NameTKey,
-			Props:    req.Props,
+			Props:    req.PropVals,
 		}
 
 		result, err := svc.CreateExercise(ctx, data)
@@ -116,6 +116,19 @@ func makeCreatePropertyEndpoint(svc service.Service) endpoint.Endpoint {
 	}
 }
 
+func makeGetPropertiesEndpoint(svc service.Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		result, err := svc.GetProperties(ctx)
+		if err != nil {
+			return nil, err
+		}
+
+		return GetPropertiesResponse{
+			Props: result,
+		}, nil
+	}
+}
+
 func makeUpdatePropertyEndpoint(svc service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(*UpdatePropertyRequest)
@@ -145,24 +158,11 @@ func makeDeletePropertyEndpoint(svc service.Service) endpoint.Endpoint {
 	}
 }
 
-func makeUpdatePropertiesOfExerciseEndpoint(svc service.Service) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req := request.(*UpdatePropertiesOfExerciseRequest)
-
-		err := svc.UpdatePropertiesOfExercise(ctx, req.ExerciseID, req.PropsToAdd, req.PropsToUpdate, req.PropIDsToRemove)
-		if err != nil {
-			return nil, err
-		}
-
-		return UpdatePropertiesOfExerciseResponse{}, nil
-	}
-}
-
 func makeFindExercisesByPropertiesEndpoint(svc service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(*FindExercisesByPropertiesRequest)
 
-		result, err := svc.FindExercisesByProperties(ctx, req.Conditions)
+		result, err := svc.FindExercisesByProperties(ctx, req.OrConditions)
 		if err != nil {
 			return nil, err
 		}

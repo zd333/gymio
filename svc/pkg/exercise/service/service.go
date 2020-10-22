@@ -13,12 +13,11 @@ type Service interface {
 	DeleteExercise(ctx context.Context, id string) error
 
 	CreateProperty(ctx context.Context, data entities.PropertyData) (id string, err error)
+	GetProperties(ctx context.Context) (props []entities.Property, err error)
 	UpdateProperty(ctx context.Context, id string, data entities.PropertyData) error
 	DeleteProperty(ctx context.Context, id string) error
 
-	UpdatePropertiesOfExercise(ctx context.Context, exerciseID string, add []entities.PropertyValue, update []entities.PropertyValue, delete []string) error
-
-	FindExercisesByProperties(ctx context.Context, conditions entities.FindExercisesConditions) ([]*entities.Exercise, error)
+	FindExercisesByProperties(ctx context.Context, conditions []entities.FindExercisesOrCondition) ([]entities.Exercise, error)
 }
 
 func New() Service {
@@ -50,6 +49,10 @@ func (s exerciseService) CreateProperty(ctx context.Context, data entities.Prope
 	return "", entities.ErrNotImplemented
 }
 
+func (s exerciseService) GetProperties(ctx context.Context) (props []entities.Property, err error) {
+	return nil, entities.ErrNotImplemented
+}
+
 func (s exerciseService) UpdateProperty(ctx context.Context, id string, data entities.PropertyData) error {
 	return entities.ErrNotImplemented
 }
@@ -58,10 +61,6 @@ func (s exerciseService) DeleteProperty(ctx context.Context, id string) error {
 	return entities.ErrNotImplemented
 }
 
-func (s exerciseService) UpdatePropertiesOfExercise(ctx context.Context, exerciseID string, add []entities.PropertyValue, update []entities.PropertyValue, delete []string) error {
-	return entities.ErrNotImplemented
-}
-
-func (s exerciseService) FindExercisesByProperties(ctx context.Context, conditions entities.FindExercisesConditions) ([]*entities.Exercise, error) {
+func (s exerciseService) FindExercisesByProperties(ctx context.Context, conditions []entities.FindExercisesOrCondition) ([]entities.Exercise, error) {
 	return nil, entities.ErrNotImplemented
 }

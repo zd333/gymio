@@ -6,7 +6,7 @@ import { Writer, Reader } from 'protobufjs/minimal';
 export interface Exercise {
   id: string;
   nameTKey: string;
-  properties: ExercisePropertyValue[];
+  propertyValues: ExercisePropertyValue[];
 }
 
 const baseExercise: object = {
@@ -18,7 +18,7 @@ export const Exercise = {
   encode(message: Exercise, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.id);
     writer.uint32(18).string(message.nameTKey);
-    for (const v of message.properties) {
+    for (const v of message.propertyValues) {
       ExercisePropertyValue.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
@@ -27,7 +27,7 @@ export const Exercise = {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseExercise } as Exercise;
-    message.properties = [];
+    message.propertyValues = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -38,7 +38,7 @@ export const Exercise = {
           message.nameTKey = reader.string();
           break;
         case 3:
-          message.properties.push(ExercisePropertyValue.decode(reader, reader.uint32()));
+          message.propertyValues.push(ExercisePropertyValue.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -49,32 +49,32 @@ export const Exercise = {
   },
   fromJSON(object: any): Exercise {
     const message = { ...baseExercise } as Exercise;
-    message.properties = [];
+    message.propertyValues = [];
     if (object.id !== undefined && object.id !== null) {
       message.id = String(object.id);
     }
     if (object.nameTKey !== undefined && object.nameTKey !== null) {
       message.nameTKey = String(object.nameTKey);
     }
-    if (object.properties !== undefined && object.properties !== null) {
-      for (const e of object.properties) {
-        message.properties.push(ExercisePropertyValue.fromJSON(e));
+    if (object.propertyValues !== undefined && object.propertyValues !== null) {
+      for (const e of object.propertyValues) {
+        message.propertyValues.push(ExercisePropertyValue.fromJSON(e));
       }
     }
     return message;
   },
   fromPartial(object: DeepPartial<Exercise>): Exercise {
     const message = { ...baseExercise } as Exercise;
-    message.properties = [];
+    message.propertyValues = [];
     if (object.id !== undefined && object.id !== null) {
       message.id = object.id;
     }
     if (object.nameTKey !== undefined && object.nameTKey !== null) {
       message.nameTKey = object.nameTKey;
     }
-    if (object.properties !== undefined && object.properties !== null) {
-      for (const e of object.properties) {
-        message.properties.push(ExercisePropertyValue.fromPartial(e));
+    if (object.propertyValues !== undefined && object.propertyValues !== null) {
+      for (const e of object.propertyValues) {
+        message.propertyValues.push(ExercisePropertyValue.fromPartial(e));
       }
     }
     return message;
@@ -83,10 +83,10 @@ export const Exercise = {
     const obj: any = {};
     message.id !== undefined && (obj.id = message.id);
     message.nameTKey !== undefined && (obj.nameTKey = message.nameTKey);
-    if (message.properties) {
-      obj.properties = message.properties.map(e => e ? ExercisePropertyValue.toJSON(e) : undefined);
+    if (message.propertyValues) {
+      obj.propertyValues = message.propertyValues.map(e => e ? ExercisePropertyValue.toJSON(e) : undefined);
     } else {
-      obj.properties = [];
+      obj.propertyValues = [];
     }
     return obj;
   },

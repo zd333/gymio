@@ -8,24 +8,23 @@ import "exercise/v1/exercise.proto";
 import "exercise/v1/exercise_property.proto";
 import "exercise/v1/exercise_property_value.proto";
 
-service ExerciseAPIService {
+service ExerciseAPI {
   rpc CreateExercise(CreateExerciseRequest) returns (CreateExerciseResponse);
   rpc GetExercise(GetExerciseRequest) returns (GetExerciseResponse);
   rpc UpdateExercise(UpdateExerciseRequest) returns (UpdateExerciseResponse);
   rpc DeleteExercise(DeleteExerciseRequest) returns (DeleteExerciseResponse);
 
   rpc CreateProperty(CreatePropertyRequest) returns (CreatePropertyResponse);
+  rpc GetProperties(GetPropertiesRequest) returns (GetPropertiesResponse);
   rpc UpdateProperty(UpdatePropertyRequest) returns (UpdatePropertyResponse);
   rpc DeleteProperty(DeletePropertyRequest) returns (DeletePropertyResponse);
-
-  rpc UpdatePropertiesOfExercise(UpdatePropertiesOfExerciseRequest) returns (UpdatePropertiesOfExerciseResponse);
 
   rpc FindExercisesByProperties(FindExercisesByPropertiesRequest) returns (FindExercisesByPropertiesResponse);
 }
 
 message CreateExerciseRequest {
   string name_t_key = 1;
-  repeated ExercisePropertyValue properties = 2;
+  repeated ExercisePropertyValue property_values = 2;
 }
 
 message CreateExerciseResponse {
@@ -43,6 +42,7 @@ message GetExerciseResponse {
 message UpdateExerciseRequest {
   string id = 1;
   string name_t_key = 2;
+  repeated ExercisePropertyValue property_values = 3;
 }
 
 message UpdateExerciseResponse {}
@@ -62,6 +62,12 @@ message CreatePropertyResponse {
   string id = 1;
 }
 
+message GetPropertiesRequest {}
+
+message GetPropertiesResponse {
+  repeated ExerciseProperty properties = 1;
+}
+
 message UpdatePropertyRequest {
   string name_t_key = 1;
 }
@@ -74,26 +80,13 @@ message DeletePropertyRequest {
 
 message DeletePropertyResponse {}
 
-message UpdatePropertiesOfExerciseRequest {
-  string exercise_id = 1;
-  repeated ExercisePropertyValue properties_to_add = 2;
-  repeated ExercisePropertyValue properties_to_update = 3;
-  repeated string property_ids_to_remove = 4;
-}
-
-message UpdatePropertiesOfExerciseResponse {}
-
 message FindExercisesByPropertiesRequest {
   repeated OrCondition or_conditions = 1;
   message OrCondition {
     repeated AndCondition and_conditions = 2;
     message AndCondition {
       string property_id = 3;
-      oneof property_value {
-        bool bool_value = 4;
-        string string_value = 5;
-        int32 int_value = 6;
-      }
+      string serialized_property_value = 4;
     }
   }
 }

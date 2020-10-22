@@ -9,21 +9,16 @@ export interface ExercisePropertyValue {
 }
 
 export interface ExercisePropertyValueUnion {
-  either?: { $case: 'boolValue', boolValue: boolean } | { $case: 'stringValue', stringValue: string } | { $case: 'intValue', intValue: number } | { $case: 'intPairValue', intPairValue: IntPairExercisePropertyValue } | { $case: 'mapValue', mapValue: MapExercisePropertyValue };
+  either?: { $case: 'boolValue', boolValue: boolean } | { $case: 'stringValue', stringValue: string } | { $case: 'stringListValue', stringListValue: StringListExercisePropertyValue } | { $case: 'intValue', intValue: number } | { $case: 'intPairValue', intPairValue: IntPairExercisePropertyValue };
+}
+
+export interface StringListExercisePropertyValue {
+  values: string[];
 }
 
 export interface IntPairExercisePropertyValue {
   loverValue: number;
   higherValue: number;
-}
-
-export interface MapExercisePropertyValue {
-  map: { [key: string]: ExercisePropertyValueUnion };
-}
-
-export interface MapExercisePropertyValue_MapEntry {
-  key: string;
-  value: ExercisePropertyValueUnion | undefined;
 }
 
 const baseExercisePropertyValue: object = {
@@ -32,16 +27,13 @@ const baseExercisePropertyValue: object = {
 const baseExercisePropertyValueUnion: object = {
 };
 
+const baseStringListExercisePropertyValue: object = {
+  values: "",
+};
+
 const baseIntPairExercisePropertyValue: object = {
   loverValue: 0,
   higherValue: 0,
-};
-
-const baseMapExercisePropertyValue: object = {
-};
-
-const baseMapExercisePropertyValue_MapEntry: object = {
-  key: "",
 };
 
 export const ExercisePropertyValue = {
@@ -110,14 +102,14 @@ export const ExercisePropertyValueUnion = {
     if (message.either?.$case === 'stringValue') {
       writer.uint32(18).string(message.either.stringValue);
     }
+    if (message.either?.$case === 'stringListValue') {
+      StringListExercisePropertyValue.encode(message.either.stringListValue, writer.uint32(26).fork()).ldelim();
+    }
     if (message.either?.$case === 'intValue') {
-      writer.uint32(24).int32(message.either.intValue);
+      writer.uint32(32).int32(message.either.intValue);
     }
     if (message.either?.$case === 'intPairValue') {
-      IntPairExercisePropertyValue.encode(message.either.intPairValue, writer.uint32(34).fork()).ldelim();
-    }
-    if (message.either?.$case === 'mapValue') {
-      MapExercisePropertyValue.encode(message.either.mapValue, writer.uint32(42).fork()).ldelim();
+      IntPairExercisePropertyValue.encode(message.either.intPairValue, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -135,13 +127,13 @@ export const ExercisePropertyValueUnion = {
           message.either = {$case: 'stringValue', stringValue: reader.string()};
           break;
         case 3:
-          message.either = {$case: 'intValue', intValue: reader.int32()};
+          message.either = {$case: 'stringListValue', stringListValue: StringListExercisePropertyValue.decode(reader, reader.uint32())};
           break;
         case 4:
-          message.either = {$case: 'intPairValue', intPairValue: IntPairExercisePropertyValue.decode(reader, reader.uint32())};
+          message.either = {$case: 'intValue', intValue: reader.int32()};
           break;
         case 5:
-          message.either = {$case: 'mapValue', mapValue: MapExercisePropertyValue.decode(reader, reader.uint32())};
+          message.either = {$case: 'intPairValue', intPairValue: IntPairExercisePropertyValue.decode(reader, reader.uint32())};
           break;
         default:
           reader.skipType(tag & 7);
@@ -158,14 +150,14 @@ export const ExercisePropertyValueUnion = {
     if (object.stringValue !== undefined && object.stringValue !== null) {
       message.either = {$case: 'stringValue', stringValue: String(object.stringValue)};
     }
+    if (object.stringListValue !== undefined && object.stringListValue !== null) {
+      message.either = {$case: 'stringListValue', stringListValue: StringListExercisePropertyValue.fromJSON(object.stringListValue)};
+    }
     if (object.intValue !== undefined && object.intValue !== null) {
       message.either = {$case: 'intValue', intValue: Number(object.intValue)};
     }
     if (object.intPairValue !== undefined && object.intPairValue !== null) {
       message.either = {$case: 'intPairValue', intPairValue: IntPairExercisePropertyValue.fromJSON(object.intPairValue)};
-    }
-    if (object.mapValue !== undefined && object.mapValue !== null) {
-      message.either = {$case: 'mapValue', mapValue: MapExercisePropertyValue.fromJSON(object.mapValue)};
     }
     return message;
   },
@@ -177,14 +169,14 @@ export const ExercisePropertyValueUnion = {
     if (object.either?.$case === 'stringValue' && object.either?.stringValue !== undefined && object.either?.stringValue !== null) {
       message.either = {$case: 'stringValue', stringValue: object.either.stringValue};
     }
+    if (object.either?.$case === 'stringListValue' && object.either?.stringListValue !== undefined && object.either?.stringListValue !== null) {
+      message.either = {$case: 'stringListValue', stringListValue: StringListExercisePropertyValue.fromPartial(object.either.stringListValue)};
+    }
     if (object.either?.$case === 'intValue' && object.either?.intValue !== undefined && object.either?.intValue !== null) {
       message.either = {$case: 'intValue', intValue: object.either.intValue};
     }
     if (object.either?.$case === 'intPairValue' && object.either?.intPairValue !== undefined && object.either?.intPairValue !== null) {
       message.either = {$case: 'intPairValue', intPairValue: IntPairExercisePropertyValue.fromPartial(object.either.intPairValue)};
-    }
-    if (object.either?.$case === 'mapValue' && object.either?.mapValue !== undefined && object.either?.mapValue !== null) {
-      message.either = {$case: 'mapValue', mapValue: MapExercisePropertyValue.fromPartial(object.either.mapValue)};
     }
     return message;
   },
@@ -192,9 +184,65 @@ export const ExercisePropertyValueUnion = {
     const obj: any = {};
     message.either?.$case === 'boolValue' && (obj.boolValue = message.either?.boolValue);
     message.either?.$case === 'stringValue' && (obj.stringValue = message.either?.stringValue);
+    message.either?.$case === 'stringListValue' && (obj.stringListValue = message.either?.stringListValue ? StringListExercisePropertyValue.toJSON(message.either?.stringListValue) : undefined);
     message.either?.$case === 'intValue' && (obj.intValue = message.either?.intValue);
     message.either?.$case === 'intPairValue' && (obj.intPairValue = message.either?.intPairValue ? IntPairExercisePropertyValue.toJSON(message.either?.intPairValue) : undefined);
-    message.either?.$case === 'mapValue' && (obj.mapValue = message.either?.mapValue ? MapExercisePropertyValue.toJSON(message.either?.mapValue) : undefined);
+    return obj;
+  },
+};
+
+export const StringListExercisePropertyValue = {
+  encode(message: StringListExercisePropertyValue, writer: Writer = Writer.create()): Writer {
+    for (const v of message.values) {
+      writer.uint32(10).string(v!);
+    }
+    return writer;
+  },
+  decode(input: Uint8Array | Reader, length?: number): StringListExercisePropertyValue {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseStringListExercisePropertyValue } as StringListExercisePropertyValue;
+    message.values = [];
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.values.push(reader.string());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object: any): StringListExercisePropertyValue {
+    const message = { ...baseStringListExercisePropertyValue } as StringListExercisePropertyValue;
+    message.values = [];
+    if (object.values !== undefined && object.values !== null) {
+      for (const e of object.values) {
+        message.values.push(String(e));
+      }
+    }
+    return message;
+  },
+  fromPartial(object: DeepPartial<StringListExercisePropertyValue>): StringListExercisePropertyValue {
+    const message = { ...baseStringListExercisePropertyValue } as StringListExercisePropertyValue;
+    message.values = [];
+    if (object.values !== undefined && object.values !== null) {
+      for (const e of object.values) {
+        message.values.push(e);
+      }
+    }
+    return message;
+  },
+  toJSON(message: StringListExercisePropertyValue): unknown {
+    const obj: any = {};
+    if (message.values) {
+      obj.values = message.values.map(e => e);
+    } else {
+      obj.values = [];
+    }
     return obj;
   },
 };
@@ -249,124 +297,6 @@ export const IntPairExercisePropertyValue = {
     const obj: any = {};
     message.loverValue !== undefined && (obj.loverValue = message.loverValue);
     message.higherValue !== undefined && (obj.higherValue = message.higherValue);
-    return obj;
-  },
-};
-
-export const MapExercisePropertyValue = {
-  encode(message: MapExercisePropertyValue, writer: Writer = Writer.create()): Writer {
-    Object.entries(message.map).forEach(([key, value]) => {
-      MapExercisePropertyValue_MapEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
-    })
-    return writer;
-  },
-  decode(input: Uint8Array | Reader, length?: number): MapExercisePropertyValue {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseMapExercisePropertyValue } as MapExercisePropertyValue;
-    message.map = {};
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          const entry1 = MapExercisePropertyValue_MapEntry.decode(reader, reader.uint32());
-          if (entry1.value !== undefined) {
-            message.map[entry1.key] = entry1.value;
-          }
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object: any): MapExercisePropertyValue {
-    const message = { ...baseMapExercisePropertyValue } as MapExercisePropertyValue;
-    message.map = {};
-    if (object.map !== undefined && object.map !== null) {
-      Object.entries(object.map).forEach(([key, value]) => {
-        message.map[key] = ExercisePropertyValueUnion.fromJSON(value);
-      })
-    }
-    return message;
-  },
-  fromPartial(object: DeepPartial<MapExercisePropertyValue>): MapExercisePropertyValue {
-    const message = { ...baseMapExercisePropertyValue } as MapExercisePropertyValue;
-    message.map = {};
-    if (object.map !== undefined && object.map !== null) {
-      Object.entries(object.map).forEach(([key, value]) => {
-        if (value !== undefined) {
-          message.map[key] = ExercisePropertyValueUnion.fromPartial(value);
-        }
-      })
-    }
-    return message;
-  },
-  toJSON(message: MapExercisePropertyValue): unknown {
-    const obj: any = {};
-    obj.map = {};
-    if (message.map) {
-      Object.entries(message.map).forEach(([k, v]) => {
-        obj.map[k] = ExercisePropertyValueUnion.toJSON(v);
-      })
-    }
-    return obj;
-  },
-};
-
-export const MapExercisePropertyValue_MapEntry = {
-  encode(message: MapExercisePropertyValue_MapEntry, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.key);
-    if (message.value !== undefined && message.value !== undefined) {
-      ExercisePropertyValueUnion.encode(message.value, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-  decode(input: Uint8Array | Reader, length?: number): MapExercisePropertyValue_MapEntry {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseMapExercisePropertyValue_MapEntry } as MapExercisePropertyValue_MapEntry;
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.key = reader.string();
-          break;
-        case 2:
-          message.value = ExercisePropertyValueUnion.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object: any): MapExercisePropertyValue_MapEntry {
-    const message = { ...baseMapExercisePropertyValue_MapEntry } as MapExercisePropertyValue_MapEntry;
-    if (object.key !== undefined && object.key !== null) {
-      message.key = String(object.key);
-    }
-    if (object.value !== undefined && object.value !== null) {
-      message.value = ExercisePropertyValueUnion.fromJSON(object.value);
-    }
-    return message;
-  },
-  fromPartial(object: DeepPartial<MapExercisePropertyValue_MapEntry>): MapExercisePropertyValue_MapEntry {
-    const message = { ...baseMapExercisePropertyValue_MapEntry } as MapExercisePropertyValue_MapEntry;
-    if (object.key !== undefined && object.key !== null) {
-      message.key = object.key;
-    }
-    if (object.value !== undefined && object.value !== null) {
-      message.value = ExercisePropertyValueUnion.fromPartial(object.value);
-    }
-    return message;
-  },
-  toJSON(message: MapExercisePropertyValue_MapEntry): unknown {
-    const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value ? ExercisePropertyValueUnion.toJSON(message.value) : undefined);
     return obj;
   },
 };

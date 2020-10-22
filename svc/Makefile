@@ -12,7 +12,7 @@ lint: ## Run linter for the code
 	golangci-lint run
 
 install-exercise-api: dep ## Build and install exercise API app
-	go install -mod vendor -race ./cmd/exercise-api
+	go install -mod vendor ./cmd/exercise-api
 
 # Absolutely awesome: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 help:

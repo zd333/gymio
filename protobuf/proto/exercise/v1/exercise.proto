@@ -9,5 +9,5 @@ import "exercise/v1/exercise_property_value.proto";
 message Exercise {
   string id = 1;
   string name_t_key = 2;
-  repeated ExercisePropertyValue properties = 3;
+  repeated ExercisePropertyValue property_values = 3;
 }
