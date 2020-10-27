@@ -1,11 +1,4 @@
 # Gymio protobuf
 
 API protobuf definition/description + generated libraries for different languages
-
-## Setup
-
-`npm run setup`
-
-## Generate libraries
-
-`npm run generate`
+Go generated code contains module file only for referencing it from consumer mod files.

@@ -1,6 +1,7 @@
 {
-    "cSpell.words": [
-        "exercisev",
-        "grpctransport"
-    ]
+    "protoc": {
+      "options": [
+          "--proto_path=protobuf/proto"
+      ]
+  }
 }

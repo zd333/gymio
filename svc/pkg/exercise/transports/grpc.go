@@ -4,7 +4,7 @@ import (
 	"context"
 
 	grpctransport "github.com/go-kit/kit/transport/grpc"
-	exercisev1 "github.com/zd333/gymio/svc/gen/exercise/v1"
+	exercisev1 "github.com/zd333/gymio/protobuf/gen/go/exercise/v1"
 	"github.com/zd333/gymio/svc/pkg/exercise/endpoints"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"

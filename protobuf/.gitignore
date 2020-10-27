@@ -1,2 +1,5 @@
-# Folders
 /node_modules
+/gen
+!gen/go/.gitkeep
+!gen/go/go.mod
+!gen/go/go.sum
