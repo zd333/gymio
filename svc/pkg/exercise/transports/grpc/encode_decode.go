@@ -23,7 +23,7 @@ func decodeCreateExerciseRequest(_ context.Context, grpcReq interface{}) (interf
 		eReq.PropVals = append(eReq.PropVals, *pv)
 	}
 
-	return eReq, nil
+	return &eReq, nil
 }
 
 func encodeCreateExerciseResponse(_ context.Context, endpointRes interface{}) (interface{}, error) {
@@ -41,7 +41,7 @@ func decodeGetExerciseRequest(_ context.Context, grpcReq interface{}) (interface
 		ID: trReq.Id,
 	}
 
-	return eReq, nil
+	return &eReq, nil
 }
 
 func encodeGetExerciseResponse(_ context.Context, endpointRes interface{}) (interface{}, error) {
@@ -51,7 +51,7 @@ func encodeGetExerciseResponse(_ context.Context, endpointRes interface{}) (inte
 		Exercise: &te,
 	}
 
-	return trRes, nil
+	return &trRes, nil
 }
 
 func decodeUpdateExerciseRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
@@ -69,7 +69,7 @@ func decodeUpdateExerciseRequest(_ context.Context, grpcReq interface{}) (interf
 		eReq.PropVals = append(eReq.PropVals, *pv)
 	}
 
-	return eReq, nil
+	return &eReq, nil
 }
 
 func encodeUpdateExerciseResponse(_ context.Context, endpointRes interface{}) (interface{}, error) {
@@ -84,7 +84,7 @@ func decodeDeleteExerciseRequest(_ context.Context, grpcReq interface{}) (interf
 		ID: trReq.Id,
 	}
 
-	return eReq, nil
+	return &eReq, nil
 }
 
 func encodeDeleteExerciseResponse(_ context.Context, endpointRes interface{}) (interface{}, error) {
@@ -106,7 +106,7 @@ func decodeCreatePropertyRequest(_ context.Context, grpcReq interface{}) (interf
 
 	eReq.Type = t
 
-	return eReq, nil
+	return &eReq, nil
 }
 
 func encodeCreatePropertyResponse(_ context.Context, endpointRes interface{}) (interface{}, error) {
@@ -121,7 +121,7 @@ func encodeCreatePropertyResponse(_ context.Context, endpointRes interface{}) (i
 func decodeGetPropertiesRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	eReq := endpoints.GetPropertiesRequest{}
 
-	return eReq, nil
+	return &eReq, nil
 }
 
 func encodeGetPropertiesResponse(_ context.Context, endpointRes interface{}) (interface{}, error) {
@@ -147,7 +147,7 @@ func decodeUpdatePropertyRequest(_ context.Context, grpcReq interface{}) (interf
 		NameTKey: trReq.NameTKey,
 	}
 
-	return eReq, nil
+	return &eReq, nil
 }
 
 func encodeUpdatePropertyResponse(_ context.Context, endpointRes interface{}) (interface{}, error) {
@@ -162,7 +162,7 @@ func decodeDeletePropertyRequest(_ context.Context, grpcReq interface{}) (interf
 		ID: trReq.Id,
 	}
 
-	return eReq, nil
+	return &eReq, nil
 }
 
 func encodeDeletePropertyResponse(_ context.Context, endpointRes interface{}) (interface{}, error) {
@@ -188,7 +188,7 @@ func decodeFindExercisesByPropertiesRequest(_ context.Context, grpcReq interface
 		eReq.OrConditions = append(eReq.OrConditions, eOr)
 	}
 
-	return eReq, nil
+	return &eReq, nil
 }
 
 func encodeFindExercisesByPropertiesResponse(_ context.Context, endpointRes interface{}) (interface{}, error) {

@@ -47,7 +47,7 @@ func makeCreateExerciseEndpoint(svc service.Service) endpoint.Endpoint {
 			return nil, err
 		}
 
-		return CreateExerciseResponse{
+		return &CreateExerciseResponse{
 			ID: result,
 		}, nil
 	}
@@ -62,8 +62,8 @@ func makeGetExerciseEndpoint(svc service.Service) endpoint.Endpoint {
 			return nil, err
 		}
 
-		return GetExerciseResponse{
-			Exercise: result,
+		return &GetExerciseResponse{
+			Exercise: *result,
 		}, nil
 	}
 }
@@ -80,7 +80,7 @@ func makeUpdateExerciseEndpoint(svc service.Service) endpoint.Endpoint {
 			return nil, err
 		}
 
-		return UpdateExerciseResponse{}, nil
+		return &UpdateExerciseResponse{}, nil
 	}
 }
 
@@ -93,7 +93,7 @@ func makeDeleteExerciseEndpoint(svc service.Service) endpoint.Endpoint {
 			return nil, err
 		}
 
-		return DeleteExerciseResponse{}, nil
+		return &DeleteExerciseResponse{}, nil
 	}
 }
 
@@ -110,7 +110,7 @@ func makeCreatePropertyEndpoint(svc service.Service) endpoint.Endpoint {
 			return nil, err
 		}
 
-		return CreatePropertyResponse{
+		return &CreatePropertyResponse{
 			ID: result,
 		}, nil
 	}
@@ -123,7 +123,7 @@ func makeGetPropertiesEndpoint(svc service.Service) endpoint.Endpoint {
 			return nil, err
 		}
 
-		return GetPropertiesResponse{
+		return &GetPropertiesResponse{
 			Props: result,
 		}, nil
 	}
@@ -141,7 +141,7 @@ func makeUpdatePropertyEndpoint(svc service.Service) endpoint.Endpoint {
 			return nil, err
 		}
 
-		return UpdatePropertyResponse{}, nil
+		return &UpdatePropertyResponse{}, nil
 	}
 }
 
@@ -154,7 +154,7 @@ func makeDeletePropertyEndpoint(svc service.Service) endpoint.Endpoint {
 			return nil, err
 		}
 
-		return DeletePropertyResponse{}, nil
+		return &DeletePropertyResponse{}, nil
 	}
 }
 
@@ -167,7 +167,7 @@ func makeFindExercisesByPropertiesEndpoint(svc service.Service) endpoint.Endpoin
 			return nil, err
 		}
 
-		return FindExercisesByPropertiesResponse{
+		return &FindExercisesByPropertiesResponse{
 			Exercises: result,
 		}, nil
 	}

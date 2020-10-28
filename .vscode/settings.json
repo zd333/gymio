@@ -3,5 +3,9 @@
       "options": [
           "--proto_path=protobuf/proto"
       ]
-  }
+  },
+  "cSpell.words": [
+    "exercisev",
+    "grpctransport"
+  ]
 }

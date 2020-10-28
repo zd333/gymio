@@ -11,15 +11,16 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func Register(ep *endpoints.Endpoints) {
-	// TODO: pass server from outside
-	server := grpc.NewServer()
-	impl := new(ep)
+func New(ep *endpoints.Endpoints, options ...grpc.ServerOption) *grpc.Server {
+	server := grpc.NewServer(options...)
+	api := makeAPIService(ep)
 
-	exercisev1.RegisterExerciseAPIService(server, &impl)
+	exercisev1.RegisterExerciseAPIService(server, &api)
+
+	return server
 }
 
-func new(ep *endpoints.Endpoints) exercisev1.ExerciseAPIService {
+func makeAPIService(ep *endpoints.Endpoints) exercisev1.ExerciseAPIService {
 	createExerciseHandler := grpctransport.NewServer(ep.CreateExercise, decodeCreateExerciseRequest, encodeCreateExerciseResponse)
 	getExerciseHandler := grpctransport.NewServer(ep.GetExercise, decodeGetExerciseRequest, encodeGetExerciseResponse)
 	updateExerciseHandler := grpctransport.NewServer(ep.UpdateExercise, decodeUpdateExerciseRequest, encodeUpdateExerciseResponse)

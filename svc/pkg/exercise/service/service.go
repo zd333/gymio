@@ -8,7 +8,7 @@ import (
 
 type Service interface {
 	CreateExercise(ctx context.Context, data entities.ExerciseData) (id string, err error)
-	GetExercise(ctx context.Context, id string) (entities.Exercise, error)
+	GetExercise(ctx context.Context, id string) (*entities.Exercise, error)
 	UpdateExercise(ctx context.Context, id string, data entities.ExerciseData) error
 	DeleteExercise(ctx context.Context, id string) error
 
@@ -33,8 +33,8 @@ func (s exerciseService) CreateExercise(ctx context.Context, data entities.Exerc
 	return "", entities.ErrNotImplemented
 }
 
-func (s exerciseService) GetExercise(ctx context.Context, id string) (entities.Exercise, error) {
-	return entities.Exercise{}, entities.ErrNotImplemented
+func (s exerciseService) GetExercise(ctx context.Context, id string) (*entities.Exercise, error) {
+	return nil, entities.ErrNotImplemented
 }
 
 func (s exerciseService) UpdateExercise(ctx context.Context, id string, data entities.ExerciseData) error {

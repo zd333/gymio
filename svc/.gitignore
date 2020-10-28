@@ -1,4 +1,5 @@
 /vendor
 .DS_Store
+__debug_bin
 exercise-api
 !cmd/exercise-api
