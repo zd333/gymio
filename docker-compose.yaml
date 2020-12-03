@@ -1,0 +1,21 @@
+version: '3.1'
+
+services:
+
+  postgres:
+    image: "postgres:13-alpine"
+    restart: always
+    environment:
+      POSTGRES_DB: gymio_dev
+      POSTGRES_USER: 123
+      POSTGRES_PASSWORD: 123
+    ports:
+      - "3432:5432"
+
+  adminer:
+    image: adminer
+    restart: always
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    ports:
+      - 3080:8080

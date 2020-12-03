@@ -4,10 +4,9 @@ package exercise.v1;
 
 option go_package = "exercise/v1;exercisev1";
 
-message ExerciseProperty {
-  string id = 1;
-  string name_t_key = 2;
-  PropertyType type = 3;
+message Property {
+  string name = 1;
+  PropertyType type = 2;
 }
 
 enum PropertyType {

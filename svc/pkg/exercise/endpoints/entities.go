@@ -3,16 +3,14 @@ package endpoints
 import "github.com/zd333/gymio/svc/pkg/exercise/entities"
 
 type CreateExerciseRequest struct {
-	NameTKey string
-	PropVals []entities.PropertyValue
+	Name       string
+	PropValues map[string]entities.PropertyValueUnion
 }
 
-type CreateExerciseResponse struct {
-	ID string
-}
+type CreateExerciseResponse struct{}
 
 type GetExerciseRequest struct {
-	ID string
+	Name string
 }
 
 type GetExerciseResponse struct {
@@ -20,29 +18,25 @@ type GetExerciseResponse struct {
 }
 
 type UpdateExerciseRequest struct {
-	ID       string
-	NameTKey string
-	PropVals []entities.PropertyValue
+	Exercise   entities.Exercise
+	Name       string
+	PropValues map[string]entities.PropertyValueUnion
 }
 
 type UpdateExerciseResponse struct {
 }
 
 type DeleteExerciseRequest struct {
-	ID string
+	Name string
 }
 
-type DeleteExerciseResponse struct {
-}
+type DeleteExerciseResponse struct{}
 
 type CreatePropertyRequest struct {
-	NameTKey string
-	Type     entities.PropertyType
+	Property entities.Property
 }
 
-type CreatePropertyResponse struct {
-	ID string
-}
+type CreatePropertyResponse struct{}
 
 type GetPropertiesRequest struct{}
 
@@ -50,20 +44,11 @@ type GetPropertiesResponse struct {
 	Props []entities.Property
 }
 
-type UpdatePropertyRequest struct {
-	ID       string
-	NameTKey string
-}
-
-type UpdatePropertyResponse struct {
-}
-
 type DeletePropertyRequest struct {
-	ID string
+	Name string
 }
 
-type DeletePropertyResponse struct {
-}
+type DeletePropertyResponse struct{}
 
 type FindExercisesByPropertiesRequest struct {
 	OrConditions []entities.FindExercisesOrCondition

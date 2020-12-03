@@ -27,7 +27,6 @@ func makeAPIService(ep *endpoints.Endpoints) exercisev1.ExerciseAPIService {
 	deleteExerciseHandler := grpctransport.NewServer(ep.DeleteExercise, decodeDeleteExerciseRequest, encodeDeleteExerciseResponse)
 	createPropertyHandler := grpctransport.NewServer(ep.CreateProperty, decodeCreatePropertyRequest, encodeCreatePropertyResponse)
 	getPropertiesHandler := grpctransport.NewServer(ep.GetProperties, decodeGetPropertiesRequest, encodeGetPropertiesResponse)
-	updatePropertyHandler := grpctransport.NewServer(ep.UpdateProperty, decodeUpdatePropertyRequest, encodeUpdatePropertyResponse)
 	deletePropertyHandler := grpctransport.NewServer(ep.DeleteProperty, decodeDeletePropertyRequest, encodeDeletePropertyResponse)
 	findExercisesByPropertiesHandler := grpctransport.NewServer(ep.FindExercisesByProperties, decodeFindExercisesByPropertiesRequest, encodeFindExercisesByPropertiesResponse)
 
@@ -79,14 +78,6 @@ func makeAPIService(ep *endpoints.Endpoints) exercisev1.ExerciseAPIService {
 			}
 
 			return resp.(*exercisev1.GetPropertiesResponse), nil
-		},
-		UpdateProperty: func(ctx context.Context, request *exercisev1.UpdatePropertyRequest) (*exercisev1.UpdatePropertyResponse, error) {
-			_, resp, err := updatePropertyHandler.ServeGRPC(ctx, request)
-			if err != nil {
-				return nil, errorEncoder(err)
-			}
-
-			return resp.(*exercisev1.UpdatePropertyResponse), nil
 		},
 		DeleteProperty: func(ctx context.Context, request *exercisev1.DeletePropertyRequest) (*exercisev1.DeletePropertyResponse, error) {
 			_, resp, err := deletePropertyHandler.ServeGRPC(ctx, request)

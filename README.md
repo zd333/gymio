@@ -6,7 +6,6 @@ Fitness system.
 
 ### Prerequisites
 
-* install Node
-* install Golang
+Install docker, docker-compose, Node, Golang, Heroku CLI.
 
 ### TODO

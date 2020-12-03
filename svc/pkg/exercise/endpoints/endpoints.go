@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/go-kit/kit/endpoint"
-	"github.com/zd333/gymio/svc/pkg/exercise/entities"
 	"github.com/zd333/gymio/svc/pkg/exercise/service"
 )
 
@@ -15,7 +14,6 @@ type Endpoints struct {
 	DeleteExercise            endpoint.Endpoint
 	CreateProperty            endpoint.Endpoint
 	GetProperties             endpoint.Endpoint
-	UpdateProperty            endpoint.Endpoint
 	DeleteProperty            endpoint.Endpoint
 	FindExercisesByProperties endpoint.Endpoint
 }
@@ -28,7 +26,6 @@ func New(svc service.Service) *Endpoints {
 		DeleteExercise:            makeDeleteExerciseEndpoint(svc),
 		GetProperties:             makeGetPropertiesEndpoint(svc),
 		CreateProperty:            makeCreatePropertyEndpoint(svc),
-		UpdateProperty:            makeUpdatePropertyEndpoint(svc),
 		DeleteProperty:            makeDeletePropertyEndpoint(svc),
 		FindExercisesByProperties: makeFindExercisesByPropertiesEndpoint(svc),
 	}
@@ -37,19 +34,13 @@ func New(svc service.Service) *Endpoints {
 func makeCreateExerciseEndpoint(svc service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(*CreateExerciseRequest)
-		data := entities.ExerciseData{
-			NameTKey: req.NameTKey,
-			Props:    req.PropVals,
-		}
 
-		result, err := svc.CreateExercise(ctx, data)
+		err := svc.CreateExercise(ctx, req.Name, req.PropValues)
 		if err != nil {
 			return nil, err
 		}
 
-		return &CreateExerciseResponse{
-			ID: result,
-		}, nil
+		return &CreateExerciseResponse{}, nil
 	}
 }
 
@@ -57,7 +48,7 @@ func makeGetExerciseEndpoint(svc service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(*GetExerciseRequest)
 
-		result, err := svc.GetExercise(ctx, req.ID)
+		result, err := svc.GetExercise(ctx, req.Name)
 		if err != nil {
 			return nil, err
 		}
@@ -71,11 +62,8 @@ func makeGetExerciseEndpoint(svc service.Service) endpoint.Endpoint {
 func makeUpdateExerciseEndpoint(svc service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(*UpdateExerciseRequest)
-		data := entities.ExerciseData{
-			NameTKey: req.NameTKey,
-		}
 
-		err := svc.UpdateExercise(ctx, req.ID, data)
+		err := svc.UpdateExercise(ctx, req.Name, req.PropValues)
 		if err != nil {
 			return nil, err
 		}
@@ -88,7 +76,7 @@ func makeDeleteExerciseEndpoint(svc service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(*DeleteExerciseRequest)
 
-		err := svc.DeleteExercise(ctx, req.ID)
+		err := svc.DeleteExercise(ctx, req.Name)
 		if err != nil {
 			return nil, err
 		}
@@ -100,19 +88,13 @@ func makeDeleteExerciseEndpoint(svc service.Service) endpoint.Endpoint {
 func makeCreatePropertyEndpoint(svc service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(*CreatePropertyRequest)
-		data := entities.PropertyData{
-			NameTKey: req.NameTKey,
-			Type:     req.Type,
-		}
 
-		result, err := svc.CreateProperty(ctx, data)
+		err := svc.CreateProperty(ctx, req.Property)
 		if err != nil {
 			return nil, err
 		}
 
-		return &CreatePropertyResponse{
-			ID: result,
-		}, nil
+		return &CreatePropertyResponse{}, nil
 	}
 }
 
@@ -129,27 +111,11 @@ func makeGetPropertiesEndpoint(svc service.Service) endpoint.Endpoint {
 	}
 }
 
-func makeUpdatePropertyEndpoint(svc service.Service) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req := request.(*UpdatePropertyRequest)
-		data := entities.PropertyData{
-			NameTKey: req.NameTKey,
-		}
-
-		err := svc.UpdateProperty(ctx, req.ID, data)
-		if err != nil {
-			return nil, err
-		}
-
-		return &UpdatePropertyResponse{}, nil
-	}
-}
-
 func makeDeletePropertyEndpoint(svc service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(*DeletePropertyRequest)
 
-		err := svc.DeleteProperty(ctx, req.ID)
+		err := svc.DeleteProperty(ctx, req.Name)
 		if err != nil {
 			return nil, err
 		}

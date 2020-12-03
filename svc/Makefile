@@ -11,6 +11,12 @@ dep: ## Install all build dependencies
 lint: ## Run linter for the code
 	golangci-lint run
 
+start-dev-env: ## Start services for local (dev) env
+	docker-compose up -d
+
+stop-dev-env: ## Stop local (dev) env services
+	docker-compose down
+
 install-exercise-api: dep ## Build and install exercise API app
 	go install -mod vendor ./cmd/exercise-api
 

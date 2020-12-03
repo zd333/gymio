@@ -19,10 +19,12 @@ build-image-skip-checks: # Build new buf image without any checks
 build-image: lint check-breaking-changes build-image-skip-checks # Check protos and build new buf image
 
 generate-go: ## Generate go protobuf libraries
+	rm -rf gen/go/*/
 	protoc --experimental_allow_proto3_optional --descriptor_set_in=./image.bin --go_out=./gen/go $$(buf ls-files --input ./image.bin)
 	protoc --experimental_allow_proto3_optional --descriptor_set_in=./image.bin --go-grpc_out=./gen/go $$(buf ls-files --input ./image.bin)
 
 generate-ts: ## Generate TypeScript protobuf libraries
+	rm -rf gen/ts/*/
 	protoc --experimental_allow_proto3_optional --descriptor_set_in=./image.bin --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_opt=lowerCaseServiceMethods=true,oneof=unions,returnObservable=true --ts_proto_out=./gen/ts $$(buf ls-files --input ./image.bin)
 
 generate: build-image generate-go generate-ts ## Generate protobuf libraries

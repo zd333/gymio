@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package exercise.v1;
+
+option go_package = "exercise/v1;exercisev1";
+
+import "exercise/v1/property.proto";
+
+message PropertyValue {
+  Property  property = 1;
+  PropertyValueUnion value = 2;
+}
+
+message PropertyValueUnion {
+  oneof either {
+    bool bool_value = 1;
+    string string_value = 2;
+    StringListValue string_list_value = 3;
+    int32 int_value = 4;
+    IntPairValue int_pair_value = 5;
+  }
+}
+
+message StringListValue {
+  repeated string values = 1;
+}
+
+message IntPairValue {
+  int32 lover_value = 1;
+  int32 higher_value = 2;
+}

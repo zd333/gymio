@@ -10,27 +10,55 @@ import (
 
 func decodeCreateExerciseRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	trReq := grpcReq.(*exercisev1.CreateExerciseRequest)
-	eReq := endpoints.CreateExerciseRequest{
-		NameTKey: trReq.NameTKey,
-	}
+	eReq := endpoints.CreateExerciseRequest{}
 
-	for _, tpv := range trReq.PropertyValues {
-		pv, err := decodePropertyValue(tpv)
-		if err != nil {
-			return nil, err
+	if trReq.Exercise != nil {
+		eReq.Name = trReq.Exercise.Name
+
+		for pn, tpv := range trReq.Exercise.PropertyValues {
+			eReq.PropValues[pn] = decodePropertyValue(tpv)
 		}
-
-		eReq.PropVals = append(eReq.PropVals, *pv)
 	}
 
 	return &eReq, nil
 }
 
 func encodeCreateExerciseResponse(_ context.Context, endpointRes interface{}) (interface{}, error) {
-	eRes := endpointRes.(*endpoints.CreateExerciseResponse)
-	trRes := exercisev1.CreateExerciseResponse{
-		Id: eRes.ID,
+	trRes := exercisev1.CreateExerciseResponse{}
+
+	return trRes, nil
+}
+
+func decodeUpdateExerciseRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
+	trReq := grpcReq.(*exercisev1.UpdateExerciseRequest)
+	eReq := endpoints.UpdateExerciseRequest{
+		Name: trReq.Name,
 	}
+
+	for pn, tpv := range trReq.PropertyValues {
+		eReq.PropValues[pn] = decodePropertyValue(tpv)
+	}
+
+	return &eReq, nil
+}
+
+func encodeUpdateExerciseResponse(_ context.Context, endpointRes interface{}) (interface{}, error) {
+	trRes := exercisev1.UpdateExerciseResponse{}
+
+	return trRes, nil
+}
+
+func decodeDeleteExerciseRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
+	trReq := grpcReq.(*exercisev1.DeleteExerciseRequest)
+	eReq := endpoints.DeleteExerciseRequest{
+		Name: trReq.Name,
+	}
+
+	return &eReq, nil
+}
+
+func encodeDeleteExerciseResponse(_ context.Context, endpointRes interface{}) (interface{}, error) {
+	trRes := exercisev1.DeleteExerciseResponse{}
 
 	return trRes, nil
 }
@@ -38,7 +66,7 @@ func encodeCreateExerciseResponse(_ context.Context, endpointRes interface{}) (i
 func decodeGetExerciseRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	trReq := grpcReq.(*exercisev1.GetExerciseRequest)
 	eReq := endpoints.GetExerciseRequest{
-		ID: trReq.Id,
+		Name: trReq.Name,
 	}
 
 	return &eReq, nil
@@ -54,66 +82,28 @@ func encodeGetExerciseResponse(_ context.Context, endpointRes interface{}) (inte
 	return &trRes, nil
 }
 
-func decodeUpdateExerciseRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
-	trReq := grpcReq.(*exercisev1.UpdateExerciseRequest)
-	eReq := endpoints.UpdateExerciseRequest{
-		NameTKey: trReq.NameTKey,
-	}
-
-	for _, tpv := range trReq.PropertyValues {
-		pv, err := decodePropertyValue(tpv)
-		if err != nil {
-			return nil, err
-		}
-
-		eReq.PropVals = append(eReq.PropVals, *pv)
-	}
-
-	return &eReq, nil
-}
-
-func encodeUpdateExerciseResponse(_ context.Context, endpointRes interface{}) (interface{}, error) {
-	trRes := exercisev1.UpdateExerciseResponse{}
-
-	return trRes, nil
-}
-
-func decodeDeleteExerciseRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
-	trReq := grpcReq.(*exercisev1.DeleteExerciseRequest)
-	eReq := endpoints.DeleteExerciseRequest{
-		ID: trReq.Id,
-	}
-
-	return &eReq, nil
-}
-
-func encodeDeleteExerciseResponse(_ context.Context, endpointRes interface{}) (interface{}, error) {
-	trRes := exercisev1.DeleteExerciseResponse{}
-
-	return trRes, nil
-}
-
 func decodeCreatePropertyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	trReq := grpcReq.(*exercisev1.CreatePropertyRequest)
-	eReq := endpoints.CreatePropertyRequest{
-		NameTKey: trReq.NameTKey,
+	eReq := endpoints.CreatePropertyRequest{}
+
+	if trReq.Property == nil {
+		return eReq, nil
 	}
 
-	t, err := decodePropertyType(trReq.Type)
+	eReq.Property.Name = trReq.Property.Name
+
+	t, err := decodePropertyType(trReq.Property.Type)
 	if err != nil {
 		return nil, err
 	}
 
-	eReq.Type = t
+	eReq.Property.Type = t
 
 	return &eReq, nil
 }
 
 func encodeCreatePropertyResponse(_ context.Context, endpointRes interface{}) (interface{}, error) {
-	eRes := endpointRes.(*endpoints.CreatePropertyResponse)
-	trRes := exercisev1.CreatePropertyResponse{
-		Id: eRes.ID,
-	}
+	trRes := exercisev1.CreatePropertyResponse{}
 
 	return trRes, nil
 }
@@ -129,10 +119,9 @@ func encodeGetPropertiesResponse(_ context.Context, endpointRes interface{}) (in
 	trRes := exercisev1.GetPropertiesResponse{}
 
 	for _, p := range eRes.Props {
-		tp := exercisev1.ExerciseProperty{
-			Id:       p.ID,
-			NameTKey: p.Data.NameTKey,
-			Type:     encodePropertyType(p.Data.Type),
+		tp := exercisev1.Property{
+			Name: p.Name,
+			Type: encodePropertyType(p.Type),
 		}
 
 		trRes.Properties = append(trRes.Properties, &tp)
@@ -141,25 +130,10 @@ func encodeGetPropertiesResponse(_ context.Context, endpointRes interface{}) (in
 	return trRes, nil
 }
 
-func decodeUpdatePropertyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
-	trReq := grpcReq.(*exercisev1.UpdatePropertyRequest)
-	eReq := endpoints.UpdatePropertyRequest{
-		NameTKey: trReq.NameTKey,
-	}
-
-	return &eReq, nil
-}
-
-func encodeUpdatePropertyResponse(_ context.Context, endpointRes interface{}) (interface{}, error) {
-	trRes := exercisev1.UpdatePropertyResponse{}
-
-	return trRes, nil
-}
-
 func decodeDeletePropertyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	trReq := grpcReq.(*exercisev1.DeletePropertyRequest)
 	eReq := endpoints.DeletePropertyRequest{
-		ID: trReq.Id,
+		Name: trReq.Name,
 	}
 
 	return &eReq, nil
@@ -180,7 +154,7 @@ func decodeFindExercisesByPropertiesRequest(_ context.Context, grpcReq interface
 
 		for _, tAnd := range tOr.AndConditions {
 			eOr.AndConditions = append(eOr.AndConditions, entities.FindExercisesAndCondition{
-				PropID:            tAnd.PropertyId,
+				PropName:          tAnd.PropertyName,
 				SerializedPropVal: tAnd.SerializedPropertyValue,
 			})
 		}
@@ -206,13 +180,12 @@ func encodeFindExercisesByPropertiesResponse(_ context.Context, endpointRes inte
 
 func encodeExercise(ee entities.Exercise) exercisev1.Exercise {
 	te := exercisev1.Exercise{
-		Id:       ee.ID,
-		NameTKey: ee.Data.NameTKey,
+		Name: ee.Name,
 	}
 
-	for _, pv := range ee.Data.Props {
+	for _, pv := range ee.PropVals {
 		tpv := encodePropertyValue(pv)
-		te.PropertyValues = append(te.PropertyValues, &tpv)
+		te.PropertyValues = append(te.PropertyValues, tpv)
 	}
 
 	return te
@@ -254,80 +227,70 @@ func decodePropertyType(transportType exercisev1.PropertyType) (entities.Propert
 	}
 }
 
-func encodePropertyValue(endpointVal entities.PropertyValue) exercisev1.ExercisePropertyValue {
-	res := exercisev1.ExercisePropertyValue{
-		Property: &exercisev1.ExerciseProperty{
-			Id:       endpointVal.Property.ID,
-			NameTKey: endpointVal.Property.Data.NameTKey,
+func encodePropertyValue(endpointVal entities.PropertyValue) *exercisev1.PropertyValue {
+	res := exercisev1.PropertyValue{
+		Property: &exercisev1.Property{
+			Name: endpointVal.Property.Name,
 		},
 	}
 
-	switch endpointVal.Property.Data.Type {
+	switch endpointVal.Property.Type {
 	case entities.PropertyTypeBool:
 		res.Property.Type = exercisev1.PropertyType_PROPERTY_TYPE_BOOL
-		res.Value.Either = &exercisev1.ExercisePropertyValueUnion_BoolValue{endpointVal.Value.BoolVal}
+		res.Value.Either = &exercisev1.PropertyValueUnion_BoolValue{
+			BoolValue: endpointVal.Value.BoolVal,
+		}
 	case entities.PropertyTypeString:
 		res.Property.Type = exercisev1.PropertyType_PROPERTY_TYPE_STRING
-		res.Value.Either = &exercisev1.ExercisePropertyValueUnion_StringValue{endpointVal.Value.StrVal}
+		res.Value.Either = &exercisev1.PropertyValueUnion_StringValue{
+			StringValue: endpointVal.Value.StrVal,
+		}
 	case entities.PropertyTypeStringList:
 		res.Property.Type = exercisev1.PropertyType_PROPERTY_TYPE_STRING_LIST
-		res.Value.Either = &exercisev1.ExercisePropertyValueUnion_StringListValue{&exercisev1.StringListExercisePropertyValue{
-			Values: endpointVal.Value.StrListVal,
-		}}
+		res.Value.Either = &exercisev1.PropertyValueUnion_StringListValue{
+			StringListValue: &exercisev1.StringListValue{
+				Values: *endpointVal.Value.StrListVal,
+			},
+		}
 	case entities.PropertyTypeInt:
 		res.Property.Type = exercisev1.PropertyType_PROPERTY_TYPE_INT
-		res.Value.Either = &exercisev1.ExercisePropertyValueUnion_IntValue{endpointVal.Value.IntVal}
+		res.Value.Either = &exercisev1.PropertyValueUnion_IntValue{
+			IntValue: endpointVal.Value.IntVal,
+		}
 	case entities.PropertyTypeIntPair:
 		res.Property.Type = exercisev1.PropertyType_PROPERTY_TYPE_INT_PAIR
-		res.Value.Either = &exercisev1.ExercisePropertyValueUnion_IntPairValue{&exercisev1.IntPairExercisePropertyValue{
-			LoverValue:  endpointVal.Value.IntPairVal.Lower,
-			HigherValue: endpointVal.Value.IntPairVal.Higher,
-		}}
+		res.Value.Either = &exercisev1.PropertyValueUnion_IntPairValue{
+			IntPairValue: &exercisev1.IntPairValue{
+				LoverValue:  endpointVal.Value.IntPairVal.Lower,
+				HigherValue: endpointVal.Value.IntPairVal.Higher,
+			},
+		}
 	default:
 		res.Property.Type = exercisev1.PropertyType_PROPERTY_TYPE_UNSPECIFIED
 	}
 
-	return res
+	return &res
 }
 
-func decodePropertyValue(transportVal *exercisev1.ExercisePropertyValue) (*entities.PropertyValue, error) {
-	res := entities.PropertyValue{
-		Property: entities.Property{
-			ID: transportVal.Property.Id,
-			Data: entities.PropertyData{
-				NameTKey: transportVal.Property.NameTKey,
-			},
-		},
+func decodePropertyValue(transportVal *exercisev1.PropertyValueUnion) entities.PropertyValueUnion {
+	res := entities.PropertyValueUnion{
+		BoolVal: transportVal.GetBoolValue(),
+		StrVal:  transportVal.GetStringValue(),
+		IntVal:  transportVal.GetIntValue(),
+		// IntPairVal *IntPair
 	}
 
-	switch transportVal.Property.Type {
-	case exercisev1.PropertyType_PROPERTY_TYPE_UNSPECIFIED:
-		return nil, entities.ErrEmptyPropertyType
-	case exercisev1.PropertyType_PROPERTY_TYPE_BOOL:
-		res.Property.Data.Type = entities.PropertyTypeBool
-		res.Value.BoolVal = transportVal.Value.GetBoolValue()
-	case exercisev1.PropertyType_PROPERTY_TYPE_STRING:
-		res.Property.Data.Type = entities.PropertyTypeString
-		res.Value.StrVal = transportVal.Value.GetStringValue()
-	case exercisev1.PropertyType_PROPERTY_TYPE_STRING_LIST:
-		res.Property.Data.Type = entities.PropertyTypeStringList
-		if l := transportVal.Value.GetStringListValue(); l != nil {
-			res.Value.StrListVal = l.GetValues()
-		}
-	case exercisev1.PropertyType_PROPERTY_TYPE_INT:
-		res.Property.Data.Type = entities.PropertyTypeInt
-		res.Value.IntVal = transportVal.Value.GetIntValue()
-	case exercisev1.PropertyType_PROPERTY_TYPE_INT_PAIR:
-		res.Property.Data.Type = entities.PropertyTypeIntPair
-		if v := transportVal.Value.GetIntPairValue(); v != nil {
-			res.Value.IntPairVal = entities.IntPair{
-				Higher: v.HigherValue,
-				Lower:  v.LoverValue,
-			}
-		}
-	default:
-		return nil, entities.ErrUnsupportedPropertyType
+	if l := transportVal.GetStringListValue(); l != nil {
+		v := l.GetValues()
+		res.StrListVal = &v
 	}
 
-	return &res, nil
+	if v := transportVal.GetIntPairValue(); v != nil {
+		res.IntPairVal = &entities.IntPair{
+			Higher: v.HigherValue,
+			Lower:  v.LoverValue,
+		}
+	}
+
+	return res
 }

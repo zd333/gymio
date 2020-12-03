@@ -5,8 +5,8 @@ package exercise.v1;
 option go_package = "exercise/v1;exercisev1";
 
 import "exercise/v1/exercise.proto";
-import "exercise/v1/exercise_property.proto";
-import "exercise/v1/exercise_property_value.proto";
+import "exercise/v1/property.proto";
+import "exercise/v1/property_value.proto";
 
 service ExerciseAPI {
   rpc CreateExercise(CreateExerciseRequest) returns (CreateExerciseResponse);
@@ -16,23 +16,23 @@ service ExerciseAPI {
 
   rpc CreateProperty(CreatePropertyRequest) returns (CreatePropertyResponse);
   rpc GetProperties(GetPropertiesRequest) returns (GetPropertiesResponse);
-  rpc UpdateProperty(UpdatePropertyRequest) returns (UpdatePropertyResponse);
   rpc DeleteProperty(DeletePropertyRequest) returns (DeletePropertyResponse);
 
   rpc FindExercisesByProperties(FindExercisesByPropertiesRequest) returns (FindExercisesByPropertiesResponse);
 }
 
 message CreateExerciseRequest {
-  string name_t_key = 1;
-  repeated ExercisePropertyValue property_values = 2;
+  NewExercise exercise = 1;
+  message NewExercise {
+    string name = 1;
+    map<string, PropertyValueUnion> property_values = 2;
+  }
 }
 
-message CreateExerciseResponse {
-  string id = 1;
-}
+message CreateExerciseResponse {}
 
 message GetExerciseRequest {
-  string id = 1;
+  string name = 1;
 }
 
 message GetExerciseResponse {
@@ -40,42 +40,32 @@ message GetExerciseResponse {
 }
 
 message UpdateExerciseRequest {
-  string id = 1;
-  string name_t_key = 2;
-  repeated ExercisePropertyValue property_values = 3;
+  string name = 1;
+  map<string, PropertyValueUnion> property_values = 2;
 }
 
 message UpdateExerciseResponse {}
 
 message DeleteExerciseRequest {
-  string id = 1;
+  string name = 1;
 }
 
 message DeleteExerciseResponse {}
 
 message CreatePropertyRequest {
-  string name_t_key = 1;
-  PropertyType type = 2;
+  Property property = 1;
 }
 
-message CreatePropertyResponse {
-  string id = 1;
-}
+message CreatePropertyResponse {}
 
 message GetPropertiesRequest {}
 
 message GetPropertiesResponse {
-  repeated ExerciseProperty properties = 1;
+  repeated Property properties = 1;
 }
-
-message UpdatePropertyRequest {
-  string name_t_key = 1;
-}
-
-message UpdatePropertyResponse {}
 
 message DeletePropertyRequest {
-  string id = 1;
+  string name = 1;
 }
 
 message DeletePropertyResponse {}
@@ -85,7 +75,7 @@ message FindExercisesByPropertiesRequest {
   message OrCondition {
     repeated AndCondition and_conditions = 2;
     message AndCondition {
-      string property_id = 3;
+      string property_name = 3;
       string serialized_property_value = 4;
     }
   }

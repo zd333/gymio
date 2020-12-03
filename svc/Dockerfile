@@ -1,9 +1,8 @@
 FROM golang:1.15
 
-WORKDIR $GOPATH/src/github.com/zd333/gymio/svc
-
+WORKDIR $GOPATH/src/github.com/zd333/gymio
 COPY . .
 
-RUN make install-exercise-api
+RUN cd svc && make install-exercise-api
 
 CMD ["exercise-api"]

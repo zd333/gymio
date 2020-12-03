@@ -4,10 +4,9 @@ package exercise.v1;
 
 option go_package = "exercise/v1;exercisev1";
 
-import "exercise/v1/exercise_property_value.proto";
+import "exercise/v1/property_value.proto";
 
 message Exercise {
-  string id = 1;
-  string name_t_key = 2;
-  repeated ExercisePropertyValue property_values = 3;
+  string name = 1;
+  repeated PropertyValue property_values = 2;
 }

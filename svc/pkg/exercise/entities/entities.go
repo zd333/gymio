@@ -1,18 +1,8 @@
 package entities
 
-type ExerciseData struct {
-	NameTKey string
-	Props    []PropertyValue
-}
-
 type Exercise struct {
-	ID   string
-	Data ExerciseData
-}
-
-type PropertyData struct {
-	NameTKey string
-	Type     PropertyType
+	Name     string
+	PropVals []PropertyValue
 }
 
 type PropertyType int
@@ -27,8 +17,8 @@ const (
 )
 
 type Property struct {
-	ID   string
-	Data PropertyData
+	Name string
+	Type PropertyType
 }
 
 type PropertyValue struct {
@@ -36,13 +26,12 @@ type PropertyValue struct {
 	Value    PropertyValueUnion
 }
 
-// TODO: too brute force, refactor?
 type PropertyValueUnion struct {
 	BoolVal    bool
 	StrVal     string
-	StrListVal []string
 	IntVal     int32
-	IntPairVal IntPair
+	StrListVal *[]string
+	IntPairVal *IntPair
 }
 
 type IntPair struct {
@@ -55,6 +44,6 @@ type FindExercisesOrCondition struct {
 }
 
 type FindExercisesAndCondition struct {
-	PropID            string
+	PropName          string
 	SerializedPropVal string
 }
