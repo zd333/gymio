@@ -43,7 +43,7 @@ func (s service) UpdateExercise(ctx context.Context, name string, propValues map
 }
 
 func (s service) DeleteExercise(ctx context.Context, name string) error {
-	return entities.ErrNotImplemented
+	return s.repo.DeleteExercise(ctx, name)
 }
 
 func (s service) GetExercise(ctx context.Context, name string) (*entities.Exercise, error) {

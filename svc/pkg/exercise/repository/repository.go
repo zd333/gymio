@@ -14,6 +14,7 @@ import (
 type Repository interface {
 	CreateExercise(ctx context.Context, name string, propValues map[string]entities.PropertyValueUnion) error
 	UpdateExercise(ctx context.Context, name string, propValues map[string]entities.PropertyValueUnion) error
+	DeleteExercise(ctx context.Context, name string) error
 
 	CreateProperty(ctx context.Context, property entities.Property) error
 }
@@ -34,7 +35,7 @@ type repository struct {
 func (r repository) CreateExercise(ctx context.Context, name string, propValues map[string]entities.PropertyValueUnion) error {
 	tx, err := r.conn.BeginTx(ctx, &sql.TxOptions{})
 	if err != nil {
-		return errors.Wrapf(err, "begin create exercise transaction")
+		return errors.Wrapf(err, "begin create %q exercise transaction", name)
 	}
 
 	_, err = sq.Insert("exercise.exercise").
@@ -45,25 +46,25 @@ func (r repository) CreateExercise(ctx context.Context, name string, propValues 
 	if err != nil {
 		err = tx.Rollback()
 		if err != nil {
-			return errors.Wrapf(err, "rollback insert exercise")
+			return errors.Wrapf(err, "rollback insert %q exercise", name)
 		}
 
-		return errors.Wrapf(err, "insert exercise")
+		return errors.Wrapf(err, "insert %q exercise", name)
 	}
 
 	err = r.addExercisePropValues(ctx, tx, name, propValues)
 	if err != nil {
 		err = tx.Rollback()
 		if err != nil {
-			return errors.Wrapf(err, "rollback create exercise transaction")
+			return errors.Wrapf(err, "rollback create %q exercise transaction", name)
 		}
 
-		return errors.Wrapf(err, "add exercise property values")
+		return errors.Wrapf(err, "add %q exercise property values", name)
 	}
 
 	err = tx.Commit()
 	if err != nil {
-		return errors.Wrapf(err, "commit create exercise transaction")
+		return errors.Wrapf(err, "commit create %q exercise transaction", name)
 	}
 
 	return nil
@@ -72,32 +73,44 @@ func (r repository) CreateExercise(ctx context.Context, name string, propValues 
 func (r repository) UpdateExercise(ctx context.Context, name string, propValues map[string]entities.PropertyValueUnion) error {
 	tx, err := r.conn.BeginTx(ctx, &sql.TxOptions{})
 	if err != nil {
-		return errors.Wrapf(err, "begin update exercise transaction")
+		return errors.Wrapf(err, "begin update %q exercise transaction", name)
 	}
 
 	err = r.deleteExercisePropValues(ctx, tx, name)
 	if err != nil {
 		err = tx.Rollback()
 		if err != nil {
-			return errors.Wrapf(err, "rollback update exercise transaction")
+			return errors.Wrapf(err, "rollback update %q exercise transaction", name)
 		}
 
-		return errors.Wrapf(err, "delete exercise property values")
+		return errors.Wrapf(err, "delete %q exercise property values", name)
 	}
 
 	err = r.addExercisePropValues(ctx, tx, name, propValues)
 	if err != nil {
 		err = tx.Rollback()
 		if err != nil {
-			return errors.Wrapf(err, "rollback update exercise transaction")
+			return errors.Wrapf(err, "rollback update %q exercise transaction", name)
 		}
 
-		return errors.Wrapf(err, "add exercise property values")
+		return errors.Wrapf(err, "add %q exercise property values", name)
 	}
 
 	err = tx.Commit()
 	if err != nil {
-		return errors.Wrapf(err, "commit update exercise transaction")
+		return errors.Wrapf(err, "commit update %q exercise transaction", name)
+	}
+
+	return nil
+}
+
+func (r repository) DeleteExercise(ctx context.Context, name string) error {
+	_, err := sq.Update("exercise.exercise").
+		Set("is_deleted", true).
+		Where(sq.Eq{"name": name}).
+		ExecContext(ctx)
+	if err != nil {
+		return errors.Wrapf(err, "mark %q exercise as deleted", name)
 	}
 
 	return nil
@@ -110,7 +123,7 @@ func (r repository) CreateProperty(ctx context.Context, property entities.Proper
 		Values(property.Name, property.Type).
 		ExecContext(ctx)
 	if err != nil {
-		return errors.Wrapf(err, "insert property")
+		return errors.Wrapf(err, "insert %q property", property.Name)
 	}
 
 	return nil
@@ -132,7 +145,7 @@ func (r repository) addExercisePropValues(ctx context.Context, tx *sql.Tx, name 
 
 	_, err := q.ExecContext(ctx)
 	if err != nil {
-		return errors.Wrapf(err, "insert exercise property value query")
+		return errors.Wrapf(err, "insert %q exercise property value query", name)
 	}
 
 	return nil
@@ -144,7 +157,7 @@ func (r repository) deleteExercisePropValues(ctx context.Context, tx *sql.Tx, na
 		Where(sq.Eq{"exercise": name}).
 		ExecContext(ctx)
 	if err != nil {
-		return errors.Wrapf(err, "delete exercise properties query")
+		return errors.Wrapf(err, "delete %q exercise properties query", name)
 	}
 
 	return nil
