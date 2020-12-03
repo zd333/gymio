@@ -39,7 +39,7 @@ func (s service) CreateExercise(ctx context.Context, name string, propValues map
 }
 
 func (s service) UpdateExercise(ctx context.Context, name string, propValues map[string]entities.PropertyValueUnion) error {
-	return entities.ErrNotImplemented
+	return s.repo.UpdateExercise(ctx, name, propValues)
 }
 
 func (s service) DeleteExercise(ctx context.Context, name string) error {
