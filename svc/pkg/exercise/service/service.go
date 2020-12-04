@@ -15,8 +15,8 @@ type Service interface {
 	GetExercise(ctx context.Context, name string) (*entities.Exercise, error)
 
 	CreateProperty(ctx context.Context, property entities.Property) error
-	GetProperties(ctx context.Context) (props []entities.Property, err error)
 	DeleteProperty(ctx context.Context, name string) error
+	GetProperties(ctx context.Context) (props []entities.Property, err error)
 
 	FindExercisesByProperties(ctx context.Context, conditions []entities.FindExercisesOrCondition) ([]entities.Exercise, error)
 }
@@ -55,11 +55,11 @@ func (s service) CreateProperty(ctx context.Context, property entities.Property)
 }
 
 func (s service) GetProperties(ctx context.Context) (props []entities.Property, err error) {
-	return nil, entities.ErrNotImplemented
+	return s.repo.GetProperties(ctx)
 }
 
 func (s service) DeleteProperty(ctx context.Context, name string) error {
-	return entities.ErrNotImplemented
+	return s.repo.DeleteProperty(ctx, name)
 }
 
 func (s service) FindExercisesByProperties(ctx context.Context, conditions []entities.FindExercisesOrCondition) ([]entities.Exercise, error) {

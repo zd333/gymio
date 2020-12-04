@@ -17,6 +17,8 @@ type Repository interface {
 	DeleteExercise(ctx context.Context, name string) error
 
 	CreateProperty(ctx context.Context, property entities.Property) error
+	DeleteProperty(ctx context.Context, name string) error
+	GetProperties(ctx context.Context) (props []entities.Property, err error)
 }
 
 func New(conn *sql.DB) Repository {
@@ -39,9 +41,9 @@ func (r repository) CreateExercise(ctx context.Context, name string, propValues 
 	}
 
 	_, err = sq.Insert("exercise.exercise").
-		RunWith(tx).
 		Columns("name").
 		Values(name).
+		RunWith(tx).
 		ExecContext(ctx)
 	if err != nil {
 		err = tx.Rollback()
@@ -108,6 +110,7 @@ func (r repository) DeleteExercise(ctx context.Context, name string) error {
 	_, err := sq.Update("exercise.exercise").
 		Set("is_deleted", true).
 		Where(sq.Eq{"name": name}).
+		RunWith(r.conn).
 		ExecContext(ctx)
 	if err != nil {
 		return errors.Wrapf(err, "mark %q exercise as deleted", name)
@@ -118,15 +121,49 @@ func (r repository) DeleteExercise(ctx context.Context, name string) error {
 
 func (r repository) CreateProperty(ctx context.Context, property entities.Property) error {
 	_, err := sq.Insert("exercise.property").
-		RunWith(r.conn).
 		Columns("name", "type").
 		Values(property.Name, property.Type).
+		RunWith(r.conn).
 		ExecContext(ctx)
 	if err != nil {
 		return errors.Wrapf(err, "insert %q property", property.Name)
 	}
 
 	return nil
+}
+
+func (r repository) DeleteProperty(ctx context.Context, name string) error {
+	_, err := sq.Delete("exercise.property").
+		Where(sq.Eq{"name": name}).
+		RunWith(r.conn).
+		ExecContext(ctx)
+	if err != nil {
+		return errors.Wrapf(err, "delete %q property", name)
+	}
+
+	return nil
+}
+
+func (r repository) GetProperties(ctx context.Context) (props []entities.Property, err error) {
+	rows, err := sq.Select("name", "type").
+		From("exercise.property").
+		RunWith(r.conn).
+		QueryContext(ctx)
+	if err != nil {
+		return nil, errors.Wrap(err, "select properties query")
+	}
+
+	for rows.Next() {
+		p := entities.Property{}
+
+		if err := rows.Scan(&p.Name, &p.Type); err != nil {
+			return nil, errors.Wrap(err, "select properties scan")
+		}
+
+		props = append(props, p)
+	}
+
+	return props, nil
 }
 
 func (r repository) addExercisePropValues(ctx context.Context, tx *sql.Tx, name string, propValues map[string]entities.PropertyValueUnion) error {
@@ -153,8 +190,8 @@ func (r repository) addExercisePropValues(ctx context.Context, tx *sql.Tx, name 
 
 func (r repository) deleteExercisePropValues(ctx context.Context, tx *sql.Tx, name string) error {
 	_, err := sq.Delete("exercise.exercise_property_value").
-		RunWith(tx).
 		Where(sq.Eq{"exercise": name}).
+		RunWith(tx).
 		ExecContext(ctx)
 	if err != nil {
 		return errors.Wrapf(err, "delete %q exercise properties query", name)
