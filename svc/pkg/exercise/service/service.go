@@ -47,7 +47,7 @@ func (s service) DeleteExercise(ctx context.Context, name string) error {
 }
 
 func (s service) GetExercise(ctx context.Context, name string) (*entities.Exercise, error) {
-	return nil, entities.ErrNotImplemented
+	return s.repo.GetExercise(ctx, name)
 }
 
 func (s service) CreateProperty(ctx context.Context, property entities.Property) error {

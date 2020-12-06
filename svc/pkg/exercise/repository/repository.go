@@ -15,6 +15,7 @@ type Repository interface {
 	CreateExercise(ctx context.Context, name string, propValues map[string]entities.PropertyValueUnion) error
 	UpdateExercise(ctx context.Context, name string, propValues map[string]entities.PropertyValueUnion) error
 	DeleteExercise(ctx context.Context, name string) error
+	GetExercise(ctx context.Context, name string) (*entities.Exercise, error)
 
 	CreateProperty(ctx context.Context, property entities.Property) error
 	DeleteProperty(ctx context.Context, name string) error
@@ -43,25 +44,28 @@ func (r repository) CreateExercise(ctx context.Context, name string, propValues 
 	_, err = sq.Insert("exercise.exercise").
 		Columns("name").
 		Values(name).
+		PlaceholderFormat(sq.Dollar).
 		RunWith(tx).
 		ExecContext(ctx)
 	if err != nil {
-		err = tx.Rollback()
-		if err != nil {
-			return errors.Wrapf(err, "rollback insert %q exercise", name)
+		rErr := tx.Rollback()
+		if rErr != nil {
+			return errors.Wrapf(rErr, "rollback insert %q exercise", name)
 		}
 
 		return errors.Wrapf(err, "insert %q exercise", name)
 	}
 
-	err = r.addExercisePropValues(ctx, tx, name, propValues)
-	if err != nil {
-		err = tx.Rollback()
+	if len(propValues) > 0 {
+		err = r.addExercisePropValues(ctx, tx, name, propValues)
 		if err != nil {
-			return errors.Wrapf(err, "rollback create %q exercise transaction", name)
-		}
+			rErr := tx.Rollback()
+			if rErr != nil {
+				return errors.Wrapf(rErr, "rollback create %q exercise transaction", name)
+			}
 
-		return errors.Wrapf(err, "add %q exercise property values", name)
+			return errors.Wrapf(err, "add %q exercise property values", name)
+		}
 	}
 
 	err = tx.Commit()
@@ -80,22 +84,24 @@ func (r repository) UpdateExercise(ctx context.Context, name string, propValues 
 
 	err = r.deleteExercisePropValues(ctx, tx, name)
 	if err != nil {
-		err = tx.Rollback()
-		if err != nil {
-			return errors.Wrapf(err, "rollback update %q exercise transaction", name)
+		rErr := tx.Rollback()
+		if rErr != nil {
+			return errors.Wrapf(rErr, "rollback update %q exercise transaction", name)
 		}
 
 		return errors.Wrapf(err, "delete %q exercise property values", name)
 	}
 
-	err = r.addExercisePropValues(ctx, tx, name, propValues)
-	if err != nil {
-		err = tx.Rollback()
+	if len(propValues) > 0 {
+		err = r.addExercisePropValues(ctx, tx, name, propValues)
 		if err != nil {
-			return errors.Wrapf(err, "rollback update %q exercise transaction", name)
-		}
+			rErr := tx.Rollback()
+			if rErr != nil {
+				return errors.Wrapf(rErr, "rollback update %q exercise transaction", name)
+			}
 
-		return errors.Wrapf(err, "add %q exercise property values", name)
+			return errors.Wrapf(err, "add %q exercise property values", name)
+		}
 	}
 
 	err = tx.Commit()
@@ -119,10 +125,61 @@ func (r repository) DeleteExercise(ctx context.Context, name string) error {
 	return nil
 }
 
+func (r repository) GetExercise(ctx context.Context, name string) (*entities.Exercise, error) {
+	res := entities.Exercise{
+		Name: name,
+	}
+
+	rows, err := sq.Select("name").
+		From("exercise.exercise").
+		Where(sq.Eq{"name": name}).
+		PlaceholderFormat(sq.Dollar).
+		RunWith(r.conn).
+		QueryContext(ctx)
+	if err != nil {
+		return nil, errors.Wrapf(err, "select %q exercise query", name)
+	}
+
+	if !rows.Next() {
+		// TODO: return not found error
+		return nil, nil
+	}
+
+	rows, err = sq.Select("property.name", "property.type", "exercise_property_value.value_union").
+		From("exercise.exercise_property_value").
+		Join("exercise.exercise on exercise.name = exercise_property_value.exercise").
+		Join("exercise.property on property.name = exercise_property_value.property").
+		PlaceholderFormat(sq.Dollar).
+		RunWith(r.conn).
+		QueryContext(ctx)
+	if err != nil {
+		return nil, errors.Wrap(err, "select property values query")
+	}
+
+	for rows.Next() {
+		pv := entities.PropertyValue{}
+		pvus := ""
+
+		if err := rows.Scan(&pv.Property.Name, &pv.Property.Type, &pvus); err != nil {
+			return nil, errors.Wrap(err, "select property values scan")
+		}
+
+		err = json.Unmarshal([]byte(pvus), &pv.Value)
+		if err != nil {
+			return nil, errors.Wrapf(err, "unmarshal %q value union JSON", pv.Property.Name)
+		}
+
+		res.PropVals = append(res.PropVals, pv)
+	}
+
+	return &res, nil
+}
+
 func (r repository) CreateProperty(ctx context.Context, property entities.Property) error {
 	_, err := sq.Insert("exercise.property").
 		Columns("name", "type").
 		Values(property.Name, property.Type).
+		PlaceholderFormat(sq.Dollar).
 		RunWith(r.conn).
 		ExecContext(ctx)
 	if err != nil {
@@ -135,6 +192,7 @@ func (r repository) CreateProperty(ctx context.Context, property entities.Proper
 func (r repository) DeleteProperty(ctx context.Context, name string) error {
 	_, err := sq.Delete("exercise.property").
 		Where(sq.Eq{"name": name}).
+		PlaceholderFormat(sq.Dollar).
 		RunWith(r.conn).
 		ExecContext(ctx)
 	if err != nil {
@@ -168,6 +226,7 @@ func (r repository) GetProperties(ctx context.Context) (props []entities.Propert
 
 func (r repository) addExercisePropValues(ctx context.Context, tx *sql.Tx, name string, propValues map[string]entities.PropertyValueUnion) error {
 	q := sq.Insert("exercise.exercise_property_value").
+		PlaceholderFormat(sq.Dollar).
 		RunWith(tx).
 		Columns("exercise", "property", "value_union")
 
@@ -177,7 +236,7 @@ func (r repository) addExercisePropValues(ctx context.Context, tx *sql.Tx, name 
 			return errors.Wrapf(err, "serialize property %q value %v", pn, pv)
 		}
 
-		q.Values(name, pn, u)
+		q = q.Values(name, pn, u)
 	}
 
 	_, err := q.ExecContext(ctx)
@@ -191,6 +250,7 @@ func (r repository) addExercisePropValues(ctx context.Context, tx *sql.Tx, name 
 func (r repository) deleteExercisePropValues(ctx context.Context, tx *sql.Tx, name string) error {
 	_, err := sq.Delete("exercise.exercise_property_value").
 		Where(sq.Eq{"exercise": name}).
+		PlaceholderFormat(sq.Dollar).
 		RunWith(tx).
 		ExecContext(ctx)
 	if err != nil {

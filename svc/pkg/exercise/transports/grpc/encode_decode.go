@@ -10,7 +10,9 @@ import (
 
 func decodeCreateExerciseRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	trReq := grpcReq.(*exercisev1.CreateExerciseRequest)
-	eReq := endpoints.CreateExerciseRequest{}
+	eReq := endpoints.CreateExerciseRequest{
+		PropValues: make(map[string]entities.PropertyValueUnion),
+	}
 
 	if trReq.Exercise != nil {
 		eReq.Name = trReq.Exercise.Name
@@ -26,13 +28,14 @@ func decodeCreateExerciseRequest(_ context.Context, grpcReq interface{}) (interf
 func encodeCreateExerciseResponse(_ context.Context, endpointRes interface{}) (interface{}, error) {
 	trRes := exercisev1.CreateExerciseResponse{}
 
-	return trRes, nil
+	return &trRes, nil
 }
 
 func decodeUpdateExerciseRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
 	trReq := grpcReq.(*exercisev1.UpdateExerciseRequest)
 	eReq := endpoints.UpdateExerciseRequest{
-		Name: trReq.Name,
+		Name:       trReq.Name,
+		PropValues: make(map[string]entities.PropertyValueUnion),
 	}
 
 	for pn, tpv := range trReq.PropertyValues {
@@ -45,7 +48,7 @@ func decodeUpdateExerciseRequest(_ context.Context, grpcReq interface{}) (interf
 func encodeUpdateExerciseResponse(_ context.Context, endpointRes interface{}) (interface{}, error) {
 	trRes := exercisev1.UpdateExerciseResponse{}
 
-	return trRes, nil
+	return &trRes, nil
 }
 
 func decodeDeleteExerciseRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
@@ -60,7 +63,7 @@ func decodeDeleteExerciseRequest(_ context.Context, grpcReq interface{}) (interf
 func encodeDeleteExerciseResponse(_ context.Context, endpointRes interface{}) (interface{}, error) {
 	trRes := exercisev1.DeleteExerciseResponse{}
 
-	return trRes, nil
+	return &trRes, nil
 }
 
 func decodeGetExerciseRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
@@ -105,7 +108,7 @@ func decodeCreatePropertyRequest(_ context.Context, grpcReq interface{}) (interf
 func encodeCreatePropertyResponse(_ context.Context, endpointRes interface{}) (interface{}, error) {
 	trRes := exercisev1.CreatePropertyResponse{}
 
-	return trRes, nil
+	return &trRes, nil
 }
 
 func decodeGetPropertiesRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
@@ -127,7 +130,7 @@ func encodeGetPropertiesResponse(_ context.Context, endpointRes interface{}) (in
 		trRes.Properties = append(trRes.Properties, &tp)
 	}
 
-	return trRes, nil
+	return &trRes, nil
 }
 
 func decodeDeletePropertyRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
@@ -142,7 +145,7 @@ func decodeDeletePropertyRequest(_ context.Context, grpcReq interface{}) (interf
 func encodeDeletePropertyResponse(_ context.Context, endpointRes interface{}) (interface{}, error) {
 	trRes := exercisev1.DeletePropertyResponse{}
 
-	return trRes, nil
+	return &trRes, nil
 }
 
 func decodeFindExercisesByPropertiesRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
@@ -175,7 +178,7 @@ func encodeFindExercisesByPropertiesResponse(_ context.Context, endpointRes inte
 		trRes.Exercises = append(trRes.Exercises, &te)
 	}
 
-	return trRes, nil
+	return &trRes, nil
 }
 
 func encodeExercise(ee entities.Exercise) exercisev1.Exercise {
@@ -232,6 +235,7 @@ func encodePropertyValue(endpointVal entities.PropertyValue) *exercisev1.Propert
 		Property: &exercisev1.Property{
 			Name: endpointVal.Property.Name,
 		},
+		Value: &exercisev1.PropertyValueUnion{},
 	}
 
 	switch endpointVal.Property.Type {
@@ -277,18 +281,17 @@ func decodePropertyValue(transportVal *exercisev1.PropertyValueUnion) entities.P
 		BoolVal: transportVal.GetBoolValue(),
 		StrVal:  transportVal.GetStringValue(),
 		IntVal:  transportVal.GetIntValue(),
-		// IntPairVal *IntPair
 	}
 
-	if l := transportVal.GetStringListValue(); l != nil {
-		v := l.GetValues()
+	if sl := transportVal.GetStringListValue(); sl != nil {
+		v := sl.GetValues()
 		res.StrListVal = &v
 	}
 
-	if v := transportVal.GetIntPairValue(); v != nil {
+	if ip := transportVal.GetIntPairValue(); ip != nil {
 		res.IntPairVal = &entities.IntPair{
-			Higher: v.HigherValue,
-			Lower:  v.LoverValue,
+			Higher: ip.HigherValue,
+			Lower:  ip.LoverValue,
 		}
 	}
 
