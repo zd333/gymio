@@ -5,7 +5,7 @@ go 1.15
 replace github.com/zd333/gymio/protobuf/gen/go => ../protobuf/gen/go
 
 require (
-	github.com/Masterminds/squirrel v1.4.0
+	github.com/Masterminds/squirrel v1.5.1-0.20201208213426-0f561c23e0b0
 	github.com/go-kit/kit v0.10.0
 	github.com/lib/pq v1.8.0
 	github.com/pkg/errors v0.9.1

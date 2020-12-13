@@ -141,14 +141,14 @@ func (r repository) GetExercise(ctx context.Context, name string) (*entities.Exe
 	}
 
 	if !rows.Next() {
-		// TODO: return not found error
-		return nil, nil
+		return nil, errors.New("not found")
 	}
 
 	rows, err = sq.Select("property.name", "property.type", "exercise_property_value.value_union").
-		From("exercise.exercise_property_value").
-		Join("exercise.exercise on exercise.name = exercise_property_value.exercise").
-		Join("exercise.property on property.name = exercise_property_value.property").
+		From("exercise.property").
+		InnerJoin("exercise.exercise_property_value on property.name = exercise_property_value.property").
+		InnerJoin("exercise.exercise on exercise.name = exercise_property_value.exercise").
+		Where(sq.Eq{"exercise.name": name}).
 		PlaceholderFormat(sq.Dollar).
 		RunWith(r.conn).
 		QueryContext(ctx)
