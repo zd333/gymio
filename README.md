@@ -2,10 +2,12 @@
 
 Fitness system.
 
-## Dev mode
-
-### Prerequisites
+## Prerequisites
 
 Install docker, docker-compose, Node, Golang, Heroku CLI.
 
-### TODO
+## Dev mode
+
+* `make setup`
+* `make start-dev-env`
+* run apps in your IDE (see examples in .vscode/launch.json)

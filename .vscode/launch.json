@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "exercise-api",
+            "name": "exercise-api (go)",
             "type": "go",
             "request": "launch",
             "mode": "auto",
@@ -13,6 +13,16 @@
             "env": {},
             "args": [],
             "cwd": "${workspaceFolder}/svc"
+        },
+        {
+          "type": "node",
+          "request": "launch",
+          "name": "admin-api (nest)",
+          "program": "${workspaceFolder}/apps/admin-api/src/main.ts",
+          "preLaunchTask": "tsc: watch - apps/admin-api/tsconfig.json",
+          "outFiles": ["${workspaceFolder}/dist/apps/admin-api/**/*.js"],
+          "skipFiles": ["${workspaceFolder}/node_modules/**/*.js", "<node_internals>/**/*.js"],
+          "port": 3333
         }
     ]
 }

@@ -1,5 +1,4 @@
 setup: ## Install tools
-	npm i
 	cd gen/go
 	go install google.golang.org/protobuf/cmd/protoc-gen-go
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
@@ -25,7 +24,7 @@ generate-go: ## Generate go protobuf libraries
 
 generate-ts: ## Generate TypeScript protobuf libraries
 	rm -rf gen/ts/*/
-	protoc --experimental_allow_proto3_optional --descriptor_set_in=./image.bin --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_opt=lowerCaseServiceMethods=true,oneof=unions,returnObservable=true --ts_proto_out=./gen/ts $$(buf ls-files --input ./image.bin)
+	protoc --experimental_allow_proto3_optional --descriptor_set_in=./image.bin --plugin="protoc-gen-ts=../node_modules/ts-protoc-gen/bin/protoc-gen-ts" --plugin=protoc-gen-grpc=../node_modules/.bin/grpc_tools_node_protoc_plugin --js_out="import_style=commonjs,binary:./gen/ts" --ts_out="service=grpc-node:./gen/ts" --grpc_out="./gen/ts" $$(buf ls-files --input ./image.bin)
 
 generate: build-image generate-go generate-ts ## Generate protobuf libraries
 

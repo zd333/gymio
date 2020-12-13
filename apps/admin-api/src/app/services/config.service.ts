@@ -5,6 +5,8 @@ import { AppConfig } from '../types';
 export class ConfigService {
   public getConfig(): AppConfig {
     // TODO: extract from env
-    return {};
+    return {
+      grpcServer: 'localhost:9042'
+    };
   }
 }

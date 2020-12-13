@@ -265,7 +265,7 @@ func encodePropertyValue(endpointVal entities.PropertyValue) *exercisev1.Propert
 		res.Property.Type = exercisev1.PropertyType_PROPERTY_TYPE_INT_PAIR
 		res.Value.Either = &exercisev1.PropertyValueUnion_IntPairValue{
 			IntPairValue: &exercisev1.IntPairValue{
-				LoverValue:  endpointVal.Value.IntPairVal.Lower,
+				LowerValue:  endpointVal.Value.IntPairVal.Lower,
 				HigherValue: endpointVal.Value.IntPairVal.Higher,
 			},
 		}
@@ -291,7 +291,7 @@ func decodePropertyValue(transportVal *exercisev1.PropertyValueUnion) entities.P
 	if ip := transportVal.GetIntPairValue(); ip != nil {
 		res.IntPairVal = &entities.IntPair{
 			Higher: ip.HigherValue,
-			Lower:  ip.LoverValue,
+			Lower:  ip.LowerValue,
 		}
 	}
 

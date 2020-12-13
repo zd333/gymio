@@ -26,6 +26,6 @@ message StringListValue {
 }
 
 message IntPairValue {
-  int32 lover_value = 1;
+  int32 lower_value = 1;
   int32 higher_value = 2;
 }

@@ -1,9 +1,0 @@
-{
-  "name": "gymio-protobuf",
-  "version": "1.0.0",
-  "description": "Gymio API protobuf definitions and generated libraries for different languages",
-  "author": "Alexander Changli",
-  "dependencies": {
-    "ts-proto": "^1.34.0"
-  }
-}
