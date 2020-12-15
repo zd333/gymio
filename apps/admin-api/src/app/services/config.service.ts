@@ -3,10 +3,15 @@ import { AppConfig } from '../types';
 
 @Injectable()
 export class ConfigService {
-  public getConfig(): AppConfig {
-    // TODO: extract from env
-    return {
-      grpcServer: 'localhost:9042'
+  private readonly config: AppConfig;
+
+  constructor() {
+    this.config = {
+      exerciseApiGrpcServer: process.env.EXERCISE_API_GRPC_SERVER || '',
     };
+  }
+
+  public getConfig(): AppConfig {
+    return this.config;
   }
 }

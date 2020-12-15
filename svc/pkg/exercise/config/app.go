@@ -1,5 +1,7 @@
 package config
 
+import "os"
+
 type config struct {
 	GRPC struct {
 		Port string
@@ -10,12 +12,10 @@ type config struct {
 }
 
 func New() config {
-	// TODO: get from file/env vars
 	var c config
 
-	c.GRPC.Port = ":9042"
-
-	c.DB.ConnectionString = "postgres://123:123@localhost:3432/gymio_dev?sslmode=disable"
+	c.GRPC.Port = os.Getenv("EXERCISE_API_GRPC_PORT")
+	c.DB.ConnectionString = os.Getenv("EXERCISE_API_DB_CONNECTION_STRING")
 
 	return c
 }

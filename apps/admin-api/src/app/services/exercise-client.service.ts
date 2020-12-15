@@ -15,7 +15,7 @@ export class ExerciseClientService {
   constructor(configService: ConfigService) {
     const cfg = configService.getConfig();
 
-    this.serverConnectionString = cfg.grpcServer;
+    this.serverConnectionString = cfg.exerciseApiGrpcServer;
   }
 
   public async getExercise(params: {

@@ -10,14 +10,17 @@
             "request": "launch",
             "mode": "auto",
             "program": "${workspaceFolder}/svc/cmd/exercise-api",
-            "env": {},
+            "envFile": "${workspaceFolder}/svc/.env.local-dev",
             "args": [],
             "cwd": "${workspaceFolder}/svc"
         },
+        // !Note, you have to build app first (using nx build)
+        // !VSCode will recompile/apply ONLY THOSE CHANGES WHICH HAPPENED DURING DEBUG SESSION
         {
           "type": "node",
           "request": "launch",
           "name": "admin-api (nest)",
+          "envFile": "${workspaceFolder}/apps/admin-api/.env.local-dev",
           "program": "${workspaceFolder}/apps/admin-api/src/main.ts",
           "preLaunchTask": "tsc: watch - apps/admin-api/tsconfig.json",
           "outFiles": ["${workspaceFolder}/dist/apps/admin-api/**/*.js"],

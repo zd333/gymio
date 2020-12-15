@@ -15,6 +15,7 @@
 
 * create Heroku account
 * create `gymio-exercise-api` app
+* set env variables in Heroku (see .env.example)
 * run `heroku ps:scale worker=1 -a gymio-exercise-api`
 
 #### Deploying current repo state
